@@ -54,17 +54,50 @@ jobs:
           npm run build
           node scripts/generar-pdf.mjs --pdf
 
+      # Reintenta porque cualquier push a main mientras Chromium trabaja deja a
+      # este job desactualizado y el push sale rechazado. En vez de rebasar
+      # —que sobre binarios es incómodo— se rearma sobre el main de ahora: los
+      # archivos generados acá son siempre la versión buena, porque salen del
+      # contenido que ya está en el repositorio.
       - name: Commitear si algo cambió
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add public/capturas public/descargas
-          if git diff --cached --quiet; then
+
+          if git diff --quiet -- public/capturas public/descargas &&
+             [ -z "$(git ls-files --others --exclude-standard public/capturas public/descargas)" ]; then
             echo "Los PDF ya estaban al día."
             exit 0
           fi
-          git commit -m "Regenerar la versión imprimible
+
+          # Los recién generados se guardan aparte del árbol de git.
+          mkdir -p /tmp/generado
+          cp -r public/capturas public/descargas /tmp/generado/
+
+          for intento in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            rm -rf public/capturas public/descargas
+            cp -r /tmp/generado/capturas /tmp/generado/descargas public/
+
+            git add public/capturas public/descargas
+            if git diff --cached --quiet; then
+              echo "Los PDF ya estaban al día."
+              exit 0
+            fi
+
+            git commit -m "Regenerar la versión imprimible
 
           Generado automáticamente desde el HTML por scripts/generar-pdf.mjs.
           No editar a mano: se pisa en el próximo cambio de contenido."
-          git push
+
+            if git push; then
+              echo "Publicado en el intento $intento."
+              exit 0
+            fi
+            echo "Alguien pusheó mientras tanto. Reintento $intento de 3."
+            sleep 5
+          done
+
+          echo "::error::No se pudo publicar la versión imprimible después de 3 intentos."
+          exit 1
