@@ -660,3 +660,259 @@ main {
   color: var(--papel);
   background: var(--tinta);
 }
+
+/* --- Red de resistencias --- */
+
+.bloques {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.bloque {
+  border-left: 2px solid var(--filete-fuerte);
+  padding-left: 0.9rem;
+}
+
+.bloque__cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.bloque__resistencias {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.8rem 1.1rem;
+}
+
+.campo--chico {
+  min-width: 6rem;
+  flex: 0 1 6.5rem;
+}
+
+.campo--chico input {
+  font-size: 1rem;
+  border-bottom-width: 1px;
+}
+
+.conmutador {
+  display: inline-flex;
+  gap: 0.35rem;
+}
+
+.boton--chico {
+  font-size: 0.62rem;
+  padding: 0.3rem 0.6rem;
+}
+
+.quitar {
+  font-family: var(--mono);
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--tinta-3);
+  background: transparent;
+  border: 0;
+  padding: 0 0.2rem;
+  cursor: pointer;
+}
+
+.quitar:hover {
+  color: var(--u2);
+}
+
+/* El desarrollo paso a paso: lo que justifica que esto no sea una calculadora. */
+.pasos {
+  list-style: none;
+  counter-reset: paso;
+  margin: 1.4rem 0 0;
+  padding: 0;
+}
+
+.pasos li {
+  counter-increment: paso;
+  border-top: 1px solid var(--filete);
+  padding: 0.7rem 0 0.7rem 2rem;
+  position: relative;
+}
+
+.pasos li::before {
+  content: counter(paso);
+  position: absolute;
+  left: 0;
+  top: 0.75rem;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--tinta-3);
+}
+
+.pasos__que {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--tinta-3);
+  font-family: var(--mono);
+  letter-spacing: 0.04em;
+}
+
+.pasos__cuenta {
+  display: block;
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.95rem;
+  margin-top: 0.15rem;
+  overflow-x: auto;
+}
+
+/* --- Esquemas de circuito (simbología IRAM/IEC) --- */
+/* Acá no se moderniza nada: trazo de 2 px, sin relleno, sin esquinas
+   redondeadas y sin sombras. Tiene que ser el mismo símbolo del pizarrón. */
+
+.esquema__svg {
+  display: block;
+  width: 100%;
+  max-width: 13rem;
+  height: auto;
+  margin: 0 auto 0.6rem;
+}
+
+.esquema__svg .hilo line {
+  stroke: var(--tinta);
+  stroke-width: 2;
+  stroke-linecap: square;
+}
+
+.esquema__svg .resistencia-simbolo {
+  fill: var(--papel);
+  stroke: var(--tinta);
+  stroke-width: 2;
+}
+
+.esquema__svg .nudo {
+  fill: var(--tinta);
+}
+
+.esquema__svg .borne {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+  fill: var(--tinta);
+}
+
+.esquema__svg .rotulo-r {
+  font-family: var(--mono);
+  font-size: 11px;
+  fill: var(--tinta-3);
+}
+
+.dos-esquemas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.esquema {
+  border-top: 2px solid var(--filete);
+  padding-top: 0.8rem;
+}
+
+/* El lado que se está editando: el otro es el calculado. */
+.esquema--activo {
+  border-top-color: var(--tinta);
+}
+
+.esquema__titulo {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  font-weight: 400;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--tinta-3);
+  margin: 0 0 0.7rem;
+}
+
+.esquema--activo .esquema__titulo {
+  color: var(--tinta);
+}
+
+.esquema__campos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem 1rem;
+}
+
+/* --- Verificador de Kirchhoff --- */
+
+.esquema__svg--ancho {
+  max-width: 19rem;
+  margin-bottom: 1.25rem;
+}
+
+.esquema__svg .fuente line {
+  stroke: var(--tinta);
+  stroke-linecap: butt;
+}
+
+.esquema__svg .fuente__larga {
+  stroke-width: 2;
+}
+
+.esquema__svg .fuente__corta {
+  stroke-width: 3;
+}
+
+.ecuaciones {
+  list-style: none;
+  margin: 1.4rem 0 0;
+  padding: 0;
+}
+
+.ecuacion {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  border-top: 1px solid var(--filete);
+  padding: 0.7rem 0;
+}
+
+.ecuacion__marca {
+  font-family: var(--mono);
+  font-size: 1rem;
+  line-height: 1;
+  flex: 0 0 1rem;
+}
+
+.ecuacion--bien .ecuacion__marca {
+  color: var(--verde-senal);
+}
+
+.ecuacion--mal .ecuacion__marca {
+  color: var(--u2);
+}
+
+.ecuacion__cuerpo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2rem 0.6rem;
+}
+
+.ecuacion__nombre {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.ecuacion__resto {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.85rem;
+  color: var(--tinta-2);
+}
+
+.ecuacion--mal .ecuacion__resto {
+  color: var(--u2);
+}

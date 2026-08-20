@@ -1,0 +1,123 @@
+---
+titulo: "Resistencias en serie, paralelo y mixto"
+unidad: 1
+orden: 3
+resumen: "Cómo reducir una red de resistencias a una equivalente, paso a paso."
+duracion: "2 clases"
+requisitos: ["01-ley-de-ohm"]
+pdf: true
+---
+
+import RedResistiva from '../../components/sim/RedResistiva.tsx';
+
+## La idea
+
+Un circuito real no tiene una resistencia: tiene diez. Pero desde los bornes de la
+fuente, esas diez se comportan **exactamente igual** que una sola de cierto valor. A esa
+resistencia imaginaria que las reemplaza sin que la fuente note la diferencia se la
+llama **resistencia equivalente**.
+
+Reducir una red es ir reemplazando grupos de resistencias por su equivalente hasta que
+queda una sola. Es la herramienta que usás antes de aplicar la ley de Ohm en cualquier
+circuito que no sea trivial.
+
+## En serie
+
+Dos resistencias están en serie cuando **la misma corriente pasa por las dos**, una
+después de la otra, sin desviarse por ningún lado.
+
+$$
+R_{eq} = R_1 + R_2 + \dots + R_n
+$$
+
+La equivalente es **más grande que la mayor** de las que sumaste. Tiene sentido: le
+estás poniendo más obstáculo a la corriente.
+
+## En paralelo
+
+Dos resistencias están en paralelo cuando **tienen la misma tensión en sus extremos**,
+porque están conectadas a los mismos dos nudos. La corriente se reparte entre ellas.
+
+$$
+\frac{1}{R_{eq}} = \frac{1}{R_1} + \frac{1}{R_2} + \dots + \frac{1}{R_n}
+$$
+
+La equivalente es **más chica que la menor** de todas. También tiene sentido: le abriste
+otro camino a la corriente.
+
+> **Un control que te salva en la evaluación.** Si calculás un paralelo y te da más
+> grande que alguna de las resistencias, el resultado está mal. No hace falta que
+> revises la cuenta: ya sabés que hay error. Ese control vale para cualquier paralelo,
+> siempre.
+
+Para el caso de **dos** resistencias, que es el que más vas a hacer, la fórmula se
+simplifica:
+
+$$
+R_{eq} = \frac{R_1 \cdot R_2}{R_1 + R_2}
+$$
+
+Y si son **n resistencias iguales** de valor $R$, la equivalente es $R/n$. Dos de 1 kΩ
+en paralelo dan 500 Ω.
+
+## Armá la tuya
+
+Cambiá los valores, agregá resistencias, cambiá serie por paralelo. Abajo aparece el
+desarrollo, no solo el resultado: seguí la cuenta y comparala con la que harías en la
+carpeta.
+
+<RedResistiva client:visible />
+
+## Las mixtas
+
+Casi ningún circuito es sólo serie o sólo paralelo. La estrategia es siempre la misma:
+
+1. **Buscá el grupo más adentro**, el que no tiene nada más metido dentro suyo.
+2. Reducilo a su equivalente.
+3. Volvé a mirar el circuito, que ahora es más simple.
+4. Repetí hasta que quede una sola resistencia.
+
+El orden importa: se reduce **de adentro hacia afuera**, nunca al revés.
+
+### Ejemplo resuelto
+
+$R_1 = 100\ \Omega$ en serie con el paralelo de $R_2 = 220\ \Omega$ y
+$R_3 = 330\ \Omega$.
+
+Primero el paralelo, que es lo que está más adentro:
+
+$$
+R_{23} = \frac{220 \cdot 330}{220 + 330} = \frac{72600}{550} = 132\ \Omega
+$$
+
+Ahora el circuito es $R_1$ en serie con $R_{23}$:
+
+$$
+R_{eq} = 100 + 132 = 232\ \Omega
+$$
+
+Control: 132 Ω es menor que 220 Ω, la más chica del paralelo. ✓ Y 232 Ω es mayor que
+132 Ω, como corresponde a una serie. ✓
+
+## El error más común
+
+**Ver serie donde hay paralelo.** Dos resistencias dibujadas una al lado de la otra no
+están necesariamente en serie, y dos dibujadas una arriba de la otra no están
+necesariamente en paralelo. El dibujo engaña; lo que manda son los nudos.
+
+La pregunta que hay que hacerse siempre es:
+
+- ¿Pasa **la misma corriente** por las dos, sin que se abra ningún camino entre ellas?
+  → serie.
+- ¿Están conectadas a **los mismos dos nudos**? → paralelo.
+- Ninguna de las dos → no son ni serie ni paralelo, y vas a necesitar
+  estrella-triángulo o los métodos de la unidad 2.
+
+## Para practicar
+
+1. Tres de 1 kΩ: ¿cuánto da en serie? ¿Y en paralelo?
+2. 470 Ω en paralelo con 470 Ω, y eso en serie con 220 Ω.
+3. ¿Qué resistencia hay que poner en paralelo con 1 kΩ para que la equivalente sea
+   400 Ω?
+4. Una de 10 kΩ en paralelo con una de 100 Ω. ¿Cuánto da? ¿Qué te dice eso sobre poner
+   en paralelo valores muy distintos?

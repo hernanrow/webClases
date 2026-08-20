@@ -1,0 +1,120 @@
+---
+titulo: "Transformación estrella-triángulo"
+unidad: 1
+orden: 4
+resumen: "Qué hacer cuando una red no es ni serie ni paralelo."
+duracion: "2 clases"
+requisitos: ["03-serie-paralelo-mixto"]
+pdf: true
+---
+
+import EstrellaTriangulo from '../../components/sim/EstrellaTriangulo.tsx';
+
+## El problema que resuelve
+
+Hasta acá reducías redes buscando grupos en serie o en paralelo. Pero hay circuitos
+donde **no hay ninguno**: mirás y mirás, y no encontrás dos resistencias que compartan
+los dos nudos ni dos por las que pase la misma corriente.
+
+El caso clásico es el **puente de Wheatstone** desequilibrado: cinco resistencias
+dispuestas de manera que ninguna está ni en serie ni en paralelo con otra. Ahí te
+quedaste sin herramientas.
+
+La salida es cambiar la forma del circuito sin cambiar su comportamiento. Se toman tres
+resistencias conectadas en estrella y se reemplazan por tres en triángulo que, **vistas
+desde los tres terminales**, se comportan exactamente igual. Después de la
+transformación aparecen series y paralelos donde antes no había, y seguís reduciendo
+como siempre.
+
+## Las dos conexiones
+
+**Estrella (Y).** Las tres resistencias salen de un nudo común hacia los tres
+terminales A, B y C. También se la llama T.
+
+**Triángulo (Δ).** Las tres resistencias van de terminal a terminal, cerrando un
+triángulo. No hay nudo central. También se la llama π.
+
+Son intercambiables: cualquier estrella tiene un triángulo equivalente y viceversa.
+
+## Las fórmulas
+
+**De estrella a triángulo.** Se calcula primero la suma de productos, que es la misma
+para las tres:
+
+$$
+\Sigma = R_A R_B + R_B R_C + R_C R_A
+$$
+
+$$
+R_{AB} = \frac{\Sigma}{R_C} \qquad
+R_{BC} = \frac{\Sigma}{R_A} \qquad
+R_{CA} = \frac{\Sigma}{R_B}
+$$
+
+El truco para acordarse: **cada resistencia del triángulo se divide por la rama de la
+estrella que no toca.** $R_{AB}$ conecta A con B, así que va dividida por $R_C$.
+
+**De triángulo a estrella.** Se calcula el perímetro:
+
+$$
+P = R_{AB} + R_{BC} + R_{CA}
+$$
+
+$$
+R_A = \frac{R_{AB} \cdot R_{CA}}{P} \qquad
+R_B = \frac{R_{AB} \cdot R_{BC}}{P} \qquad
+R_C = \frac{R_{BC} \cdot R_{CA}}{P}
+$$
+
+Y acá el truco es el inverso: **cada rama de la estrella es el producto de los dos lados
+del triángulo que la tocan**, dividido por el perímetro. $R_A$ toca el terminal A, y los
+lados que llegan a A son $R_{AB}$ y $R_{CA}$.
+
+## Probalo en los dos sentidos
+
+Editá cualquier lado y mirá cómo se acomoda el otro. El desarrollo de abajo te muestra
+las tres cuentas con los valores puestos.
+
+<EstrellaTriangulo client:visible />
+
+## El caso equilibrado
+
+Si las tres resistencias de la estrella son iguales, el triángulo también sale
+equilibrado, y con una relación muy simple:
+
+$$
+R_\Delta = 3 \cdot R_Y
+$$
+
+Una estrella de tres resistencias de 10 Ω equivale a un triángulo de tres de 30 Ω. Al
+revés, un triángulo de 30 Ω equivale a una estrella de 10 Ω.
+
+Ese factor 3 conviene tenerlo de memoria: sirve de control rápido. Si transformás una
+estrella más o menos equilibrada y el triángulo no te da alrededor del triple, revisá.
+
+## Cómo se usa en la práctica
+
+1. Mirá el circuito y encontrá una estrella o un triángulo **que te moleste**: el que
+   está impidiendo que veas series y paralelos.
+2. Transformalo.
+3. Redibujá el circuito con la nueva forma. **Redibujarlo no es opcional**: si intentás
+   seguir en el dibujo viejo te vas a perder.
+4. Ahora sí, reducí con serie y paralelo como siempre.
+
+Normalmente conviene ir **de triángulo a estrella**, porque la estrella suele dejar el
+circuito con la forma más fácil de seguir.
+
+> **Cuidado con qué transformás.** Al reemplazar una estrella por su triángulo, el nudo
+> central **desaparece**. Si en tu problema te piden la tensión de ese nudo, no podés
+> transformarlo: perderías justo el dato que buscás. Transformá otra parte del circuito,
+> o usá los métodos de la unidad 2.
+
+## Para practicar
+
+1. Verificá el ida y vuelta: transformá la estrella 6, 12, 18 a triángulo y después el
+   triángulo resultante de vuelta a estrella. Tienen que volver los valores originales.
+2. Una estrella con $R_A = 5$, $R_B = 10$, $R_C = 20$. ¿Cuánto dan los tres lados del
+   triángulo?
+3. Un triángulo de 60, 60 y 60. ¿Cuál es su estrella?
+4. ¿Puede una rama de la estrella valer más que el lado del triángulo del que salió?
+   Probá con el simulador y explicá por qué.

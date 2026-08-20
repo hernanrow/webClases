@@ -327,13 +327,51 @@ describe('leyes de Kirchhoff', () => {
     expect(r.todoCierra).toBe(false);
   });
 
-  it('tolera el redondeo del alumno a mA', () => {
-    // 0,333 + 0,333 + 0,334 = 1,000 exacto; con 0,3333 queda un resto chico.
+  it('tolera el redondeo del alumno a décimas de mA', () => {
+    // Redondear 0,9998 A a 0,9995 A es un error de 0,3 mA: aceptable.
     const r = verificarKirchhoff(
-      [{ nombre: 'A', corrientes: [{ rama: 'I1', valor: 1 }, { rama: 'I2', valor: -0.9995 }] }],
+      [{ nombre: 'A', corrientes: [{ rama: 'I1', valor: 1 }, { rama: 'I2', valor: -0.9997 }] }],
       [],
     );
     expect(r.nudos[0]!.cierra).toBe(true);
+  });
+
+  it('la tolerancia de nudo es en ampere, no la de malla en volt', () => {
+    // Con una sola tolerancia de 0,05 —razonable para volt— este nudo pasaría
+    // por 4,6 mA de error. Es el bug que tenía el verificador: la comprobación
+    // de nudos quedaba desactivada de hecho.
+    const r = verificarKirchhoff(
+      [
+        {
+          nombre: 'A',
+          corrientes: [
+            { rama: 'I1', valor: 0.0362 },
+            { rama: 'I2', valor: -0.0108 },
+            { rama: 'I3', valor: -0.03 },
+          ],
+        },
+      ],
+      [],
+    );
+    expect(r.nudos[0]!.cierra).toBe(false);
+    cerca(r.nudos[0]!.suma, -0.0046, 1e-3);
+  });
+
+  it('una malla admite 50 mV de error, que en ampere sería enorme', () => {
+    const r = verificarKirchhoff(
+      [],
+      [{ nombre: 'M1', tensiones: [{ elemento: 'V1', valor: 12 }, { elemento: 'R1', valor: -11.97 }] }],
+    );
+    expect(r.mallas[0]!.cierra).toBe(true);
+  });
+
+  it('acepta tolerancias a medida', () => {
+    const estricto = verificarKirchhoff(
+      [{ nombre: 'A', corrientes: [{ rama: 'I1', valor: 1e-4 }] }],
+      [],
+      { corriente: 1e-6, tension: 1e-3 },
+    );
+    expect(estricto.nudos[0]!.cierra).toBe(false);
   });
 
   it('verifica mallas además de nudos', () => {

@@ -337,24 +337,36 @@ export interface VerificacionKirchhoff {
   desarrollo: string;
 }
 
+export interface Tolerancias {
+  /** En ampere, para las ecuaciones de nudo. */
+  corriente: number;
+  /** En volt, para las ecuaciones de malla. */
+  tension: number;
+}
+
 /**
  * Verifica ΣI = 0 en cada nudo y ΣV = 0 en cada malla.
  *
- * La tolerancia es absoluta y generosa a propósito: el alumno redondea a mA y a
- * décimas de volt, y marcar en rojo una respuesta correcta mal redondeada es
- * peor que dejar pasar un error de 1 mA.
+ * **Las dos tolerancias son distintas y eso no es un detalle.** Un nudo suma
+ * ampere y una malla suma volt: una sola tolerancia para ambas convierte a una
+ * de las dos en un control inútil. Con 0,05 —razonable en volt— el nudo pasaría
+ * por alto un error de 49 mA.
+ *
+ * Los valores por defecto son generosos a propósito: el alumno redondea a
+ * décimas de miliampere, y marcar en rojo una respuesta correcta mal redondeada
+ * es peor que dejar pasar medio miliampere.
  */
 export function verificarKirchhoff(
   nudos: Nudo[],
   mallas: Malla[],
-  tolerancia = 1e-3,
+  tolerancias: Tolerancias = { corriente: 5e-4, tension: 0.05 },
 ): { nudos: VerificacionKirchhoff[]; mallas: VerificacionKirchhoff[]; todoCierra: boolean } {
   const verificarNudo = (n: Nudo): VerificacionKirchhoff => {
     const suma = n.corrientes.reduce((acc, c) => acc + c.valor, 0);
     return {
       nombre: n.nombre,
       suma,
-      cierra: Math.abs(suma) <= tolerancia,
+      cierra: Math.abs(suma) <= tolerancias.corriente,
       desarrollo: n.corrientes.map((c) => `${signo(c.valor)}${Math.abs(c.valor)} (${c.rama})`).join(' '),
     };
   };
@@ -364,7 +376,7 @@ export function verificarKirchhoff(
     return {
       nombre: m.nombre,
       suma,
-      cierra: Math.abs(suma) <= tolerancia,
+      cierra: Math.abs(suma) <= tolerancias.tension,
       desarrollo: m.tensiones.map((t) => `${signo(t.valor)}${Math.abs(t.valor)} (${t.elemento})`).join(' '),
     };
   };
