@@ -3,7 +3,14 @@
 /*
   X-Content-Type-Options: nosniff
   Referrer-Policy: no-referrer
-  Content-Security-Policy: default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
+  # Que nadie pueda meter el sitio dentro de un iframe. Va como cabecera
+  # porque el navegador ignora frame-ancestors cuando la CSP viene en <meta>.
+  Content-Security-Policy: frame-ancestors 'none'
+  X-Frame-Options: DENY
+  # La CSP NO va acá: la emite Astro como <meta>, porque necesita calcular en
+  # cada build los hashes de sus scripts inline. Una CSP puesta a mano en la
+  # cabecera no puede conocerlos, y bloquearlos deja el sitio sin simuladores.
+  # Ver security.csp en astro.config.mjs.
 
 # Los assets con hash en el nombre no cambian nunca.
 /_astro/*
