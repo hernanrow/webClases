@@ -44,11 +44,11 @@ salen solos.
 
 ## Despliegue
 
-Cloudflare Pages, build automático en cada push a `main`.
+**https://webclases.hernanatrodriguez.workers.dev**
+
+Cloudflare Workers (Static Assets), build automático en cada push a `main`.
 
 - Comando de build: `npm run build`
 - Directorio de salida: `dist`
 - Versión de Node: `22` (fijada en `.nvmrc`)
-
-Después del primer despliegue hay que poner la URL real en `site` dentro de
-`astro.config.mjs`.
+- El resto de la configuración de despliegue vive en `wrangler.jsonc`.

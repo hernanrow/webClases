@@ -234,8 +234,16 @@ educativa genérica.
 Cada fase termina publicada y andando. No pasar a la siguiente sin desplegar la anterior.
 
 **Fase 0 — Esqueleto. HECHA.** Astro + MDX + colección de la materia + layout + índice
-de unidades + un apunte de ejemplo (`01-ley-de-ohm`). Repositorio:
-`github.com/hernanrow/webClases`. Objetivo cumplido: existe una URL que funciona.
+de unidades + un apunte de ejemplo (`01-ley-de-ohm`).
+
+- Sitio: https://webclases.hernanatrodriguez.workers.dev
+- Repositorio: `github.com/hernanrow/webClases`
+
+Nota sobre el hosting: Cloudflare ya no crea proyectos de **Pages** desde el dashboard;
+el flujo nuevo es **Workers con Static Assets**, que da un dominio
+`*.<subdominio>.workers.dev` en vez de `*.pages.dev`. Es igual de estático y gratuito,
+pero la configuración vive en `wrangler.jsonc` y hay diferencias: la página 404 hay que
+declararla con `not_found_handling`, cosa que Pages hacía sola.
 
 **Fase 1 — Unidad 1 completa.** `src/lib/circuitos.ts` (resolución de sistemas lineales
 por Gauss) + `LeyDeOhm`, `CodigoColores`, `RedResistiva`, `EstrellaTriangulo`,
