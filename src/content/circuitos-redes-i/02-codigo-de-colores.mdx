@@ -1,0 +1,121 @@
+---
+titulo: "Código de colores"
+unidad: 1
+orden: 2
+resumen: "Cómo leer el valor de una resistencia por sus bandas, y cómo elegir las bandas a partir del valor."
+duracion: "1 clase"
+requisitos: ["01-ley-de-ohm"]
+pdf: true
+---
+
+import CodigoColores from '../../components/sim/CodigoColores.tsx';
+
+## Por qué existe
+
+Una resistencia de 1/4 W mide cinco milímetros. No entra el número impreso, y si
+entrara se borraría con el calor del soldador. Por eso el valor va en bandas de color
+pintadas alrededor del cuerpo, que se leen igual de sucias, igual de viejas y desde
+cualquier ángulo.
+
+Es una norma internacional (IEC 60062) y la vas a usar toda tu vida profesional. Vale
+la pena aprenderla de memoria, y la forma de aprenderla es usándola.
+
+## Cómo se lee
+
+Se lee desde la banda que está **más cerca de un extremo**. La banda de tolerancia
+queda separada del resto, más cerca de la otra patita: esa separación te dice para qué
+lado empezar.
+
+Con **cuatro bandas**:
+
+| Banda | Qué es |
+|---|---|
+| 1.ª | primera cifra |
+| 2.ª | segunda cifra |
+| 3.ª | multiplicador (por cuánto multiplicás) |
+| 4.ª | tolerancia |
+
+Con **cinco bandas** hay una cifra más antes del multiplicador. Se usan en resistencias
+de precisión, donde dos cifras no alcanzan.
+
+## La tabla
+
+| Color | Cifra | Multiplicador | Tolerancia |
+|---|---|---|---|
+| Negro | 0 | ×1 | — |
+| Marrón | 1 | ×10 | ±1 % |
+| Rojo | 2 | ×100 | ±2 % |
+| Naranja | 3 | ×1 k | — |
+| Amarillo | 4 | ×10 k | — |
+| Verde | 5 | ×100 k | ±0,5 % |
+| Azul | 6 | ×1 M | ±0,25 % |
+| Violeta | 7 | ×10 M | ±0,1 % |
+| Gris | 8 | ×100 M | ±0,05 % |
+| Blanco | 9 | ×1 G | — |
+| Oro | — | ×0,1 | ±5 % |
+| Plata | — | ×0,01 | ±10 % |
+
+Fijate que el orden de los colores no es caprichoso: del negro al blanco van de más
+oscuro a más claro, que es el orden del espectro. El oro y la plata quedan afuera de la
+secuencia porque no son cifras: solo sirven como multiplicador o como tolerancia.
+
+## Probalo
+
+Tocá cada banda para cambiarle el color y mirá cómo se mueve el valor. Después probá al
+revés: escribí un valor abajo y mirá qué bandas te quedan.
+
+<CodigoColores client:visible />
+
+## Un ejemplo que vas a ver mil veces
+
+**Marrón, negro, rojo, oro.**
+
+- Marrón = 1 → primera cifra
+- Negro = 0 → segunda cifra
+- Rojo = ×100 → multiplicador
+- Oro = ±5 % → tolerancia
+
+$$
+10 \times 100 = 1000\ \Omega = 1\ \text{k}\Omega \pm 5\ \%
+$$
+
+Esa tolerancia significa que la resistencia real puede estar en cualquier punto entre
+950 Ω y 1050 Ω, y el fabricante cumplió igual. **No es un error de fabricación: es la
+especificación.** Si en el laboratorio medís 1,03 kΩ, la resistencia está bien.
+
+> **Por qué importa la tolerancia.** Si armás un divisor de tensión con dos resistencias
+> del 5 %, el error de la salida no es del 5 %: los dos errores se combinan. Para algo
+> que tiene que ser preciso —una referencia de tensión, un filtro— hay que ir a
+> resistencias del 1 %, que son las de cinco bandas.
+
+## Qué no existe
+
+No toda resistencia que se te ocurra existe. Los valores comerciales siguen la **serie
+E24**: 1,0 · 1,1 · 1,2 · 1,3 · 1,5 · 1,6 · 1,8 · 2,0 · 2,2 · 2,4 · 2,7 · 3,0 · 3,3 ·
+3,6 · 3,9 · 4,3 · 4,7 · 5,1 · 5,6 · 6,2 · 6,8 · 7,5 · 8,2 · 9,1, repetidos en cada
+década.
+
+Por eso ves 4,7 kΩ y 10 kΩ por todos lados, y nunca 5 kΩ. Si el cálculo te da 5 kΩ,
+elegís el valor comercial más cercano y verificás que el circuito siga funcionando. Esa
+verificación es parte del diseño, no un detalle.
+
+## Errores frecuentes
+
+1. **Leer al revés.** Si empezás por la banda equivocada, marrón-negro-rojo se convierte
+   en rojo-negro-marrón: 200 Ω en vez de 1 kΩ. Buscá siempre la banda separada, que es
+   la de tolerancia, y empezá por el otro lado.
+2. **Confundir marrón con rojo, o naranja con rojo**, sobre todo en resistencias viejas
+   o con el cuerpo oscurecido por el calor. Ante la duda, medí con el téster.
+3. **Olvidarse de que el multiplicador puede achicar.** Oro y plata dividen. Amarillo,
+   violeta, oro es 4,7 Ω, no 4,7 MΩ.
+
+## Para practicar
+
+Leé estas cuatro y verificá con el simulador de arriba:
+
+- Rojo, rojo, marrón, oro
+- Amarillo, violeta, naranja, oro
+- Marrón, gris, rojo, oro
+- Verde, azul, amarillo, oro
+
+Y al revés: ¿qué bandas tiene una de 330 Ω al 5 %? ¿Y una de 2,2 MΩ?

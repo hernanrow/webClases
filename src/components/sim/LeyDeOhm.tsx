@@ -55,7 +55,8 @@ const UNIDAD_BASE: Record<Clave, string> = {
   resistencia: 'Ω',
 };
 
-const CLAVES: Clave[] = ['tension', 'corriente', 'resistencia'];
+/** Orden en pantalla, fijo. La incógnita queda al final en el caso habitual. */
+const CLAVES: Clave[] = ['tension', 'resistencia', 'corriente'];
 
 export default function LeyDeOhm() {
   const [texto, setTexto] = useState<Record<Clave, string>>({
@@ -78,6 +79,18 @@ export default function LeyDeOhm() {
     if (orden[0] !== clave) {
       setOrden([clave, ...orden.filter((c) => c !== clave)]);
     }
+  }
+
+  /**
+   * El alumno hace foco en el campo verde porque quiere fijar ese valor. Se lo
+   * convierte en dato con el número que ya mostraba, y pasa a ser incógnita el
+   * que hace más tiempo que no toca.
+   */
+  function tomarComoDato(clave: Clave) {
+    if (clave !== incognita || !resultado) return;
+    const enUnidad = formatearCampo(resultado[clave], UNIDADES[clave][unidad[clave]]!.factor);
+    setTexto({ ...texto, [clave]: enUnidad });
+    setOrden([clave, ...orden.filter((c) => c !== clave)]);
   }
 
   function limpiar() {
@@ -132,8 +145,8 @@ export default function LeyDeOhm() {
                   inputMode="decimal"
                   value={valorMostrado}
                   placeholder={esIncognita ? '—' : '0'}
-                  readOnly={esIncognita}
                   aria-describedby={esIncognita ? 'ohm-calculado' : undefined}
+                  onFocus={() => tomarComoDato(clave)}
                   onInput={(e) => editar(clave, (e.target as HTMLInputElement).value)}
                 />
                 <select
@@ -172,9 +185,12 @@ export default function LeyDeOhm() {
       )}
 
       {error && <p class="sim__error">{error}</p>}
-      {faltan && !error && (
+      {faltan && !error ? (
+        <p class="sim__aviso">Completá dos de los tres campos y el tercero se calcula solo.</p>
+      ) : (
         <p class="sim__aviso">
-          Completá dos de los tres campos y el tercero se calcula solo.
+          El campo en verde es el que se está calculando. Tocalo para escribir vos ese
+          valor: se despeja otro.
         </p>
       )}
 

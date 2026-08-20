@@ -593,3 +593,70 @@ main {
 .boton:hover {
   border-color: var(--tinta);
 }
+
+/* --- Código de colores --- */
+
+.resistencia {
+  display: block;
+  width: 100%;
+  max-width: 20rem;
+  height: auto;
+  margin: 0 auto 1.25rem;
+}
+
+.resistencia .patita {
+  stroke: var(--tinta-2);
+  stroke-width: 3;
+}
+
+.resistencia .cuerpo {
+  fill: #d8c9a8; /* cuerpo cerámico: es el color de la pieza real, no del sistema */
+}
+
+.resistencia .contorno {
+  fill: none;
+  stroke: var(--tinta);
+  stroke-width: 2;
+}
+
+.bandas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(6.5rem, 1fr));
+  gap: 0.9rem;
+  margin-bottom: 1.4rem;
+}
+
+.banda {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.banda__muestra {
+  height: 0.45rem;
+  border: 1px solid var(--tinta-2);
+}
+
+.banda select {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--tinta);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--filete-fuerte);
+  border-radius: 0;
+  padding: 0.25rem 0.1rem;
+  width: 100%;
+}
+
+.campo__unidad {
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  color: var(--tinta-2);
+}
+
+.boton--activo {
+  border-color: var(--tinta);
+  color: var(--papel);
+  background: var(--tinta);
+}
