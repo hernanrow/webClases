@@ -1,0 +1,137 @@
+---
+titulo: "Teorema de Thévenin"
+unidad: 2
+orden: 3
+resumen: "Reemplazar todo un circuito por una fuente y una resistencia, vistas desde dos bornes."
+duracion: "2 clases"
+requisitos: ["07-metodo-de-nudos"]
+pdf: true
+---
+
+import Simulador from '../../components/Simulador.astro';
+import Thevenin from '../../components/sim/Thevenin.tsx';
+
+## Qué dice
+
+> **Cualquier circuito lineal, por más grande que sea, visto desde dos bornes se
+> comporta exactamente igual que una sola fuente de tensión en serie con una sola
+> resistencia.**
+
+«Exactamente igual» quiere decir exactamente. No es una aproximación ni un modelo
+simplificado: cualquier cosa que conectes a esos dos bornes no puede distinguir el
+circuito original del equivalente. Ninguna medición, ninguna carga, ningún instrumento.
+
+## Para qué sirve
+
+Mallas y nudos te dan **todas** las corrientes de un circuito. Pero muchas veces no
+querés todas: querés saber qué pasa en **una** rama, y probar con distintos valores.
+
+Con mallas tendrías que rehacer el sistema entero cada vez que cambiás esa resistencia.
+Con Thévenin calculás el equivalente **una sola vez** y después probás todas las cargas
+que quieras haciendo una división.
+
+Ese es el uso real: no es un método para resolver circuitos, es un método para
+**estudiar una rama**.
+
+## Los dos pasos
+
+### Paso 1 — V_Th, la tensión a circuito abierto
+
+Se **saca la carga** y se calcula la tensión que queda entre esos dos bornes, sin nada
+conectado. Esa es $V_{Th}$.
+
+Sin carga no circula corriente por esa rama, así que el resto del circuito se resuelve
+sin ella. Casi siempre queda un divisor de tensión.
+
+### Paso 2 — R_Th, la resistencia vista
+
+Se **pasivan todas las fuentes** y se calcula la resistencia entre esos mismos bornes.
+
+Pasivar significa anular el aporte de cada fuente sin sacarla del circuito:
+
+- Una **fuente de tensión** pasivada es un **cortocircuito**. Una fuente ideal de
+  tensión mantiene la tensión fija; si la fijás en cero, es un cable.
+- Una **fuente de corriente** pasivada es un **circuito abierto**. Si fija la corriente
+  en cero, no hay camino.
+
+Este es el paso donde se equivoca todo el mundo, y siempre del mismo modo: sacando la
+fuente en vez de cortocircuitarla. Si la sacás, esa rama queda abierta y el circuito
+que te queda es otro.
+
+> **R_Th no depende de las fuentes.** Solo de las resistencias y de cómo están
+> conectadas. Si cambiás V1 y V2 y R_Th te cambia, hay un error. Probalo en el
+> simulador.
+
+## Probalo
+
+Marcá qué rama es la carga y mirá los dos pasos con los valores puestos. El equivalente
+se dibuja al lado.
+
+<Simulador nombre="Equivalente de Thévenin" ruta="/circuitos-redes-i/08-thevenin/" captura="/capturas/08-thevenin.png">
+  <Thevenin client:visible />
+</Simulador>
+
+## Volver a poner la carga
+
+Con el equivalente armado, la rama que te interesa es un circuito de dos elementos:
+
+$$
+I = \frac{V_{Th}}{R_{Th} + R_L}
+$$
+
+Y ahí está la ventaja: cambiar $R_L$ es cambiar un número en una división, no rehacer
+el sistema.
+
+## Máxima transferencia de potencia
+
+Con el equivalente a la vista aparece un resultado que no era nada evidente en el
+circuito original. La potencia que recibe la carga es:
+
+$$
+P = I^2 R_L = \left(\frac{V_{Th}}{R_{Th} + R_L}\right)^2 R_L
+$$
+
+Si hacés crecer $R_L$ desde cero, la potencia sube, llega a un máximo y después baja.
+El máximo está exactamente en:
+
+$$
+\boxed{R_L = R_{Th}}
+$$
+
+y ahí la carga recibe:
+
+$$
+P_{max} = \frac{V_{Th}^2}{4 R_{Th}}
+$$
+
+Movés el deslizador del simulador y lo ves: la curva tiene un solo pico, y cae de los
+dos lados.
+
+**Por qué de los dos lados.** Con $R_L$ chica circula mucha corriente, pero casi toda
+la tensión cae en $R_{Th}$ y la carga recibe poco. Con $R_L$ grande la carga se lleva
+casi toda la tensión, pero circula muy poca corriente. En el medio está el compromiso.
+
+**Cuidado con creer que eso es lo deseable siempre.** En máxima transferencia el
+rendimiento es del **50 %**: la mitad de la potencia se disipa en $R_{Th}$, dentro de
+la fuente. Eso es perfecto para una antena o un parlante, donde lo que importa es
+sacarle la mayor señal posible. Es pésimo para una línea de distribución eléctrica,
+donde perder la mitad de la energía en el cable sería una catástrofe. Ahí se busca
+$R_{Th}$ lo más chica posible, no igualarla.
+
+## Errores frecuentes
+
+1. **Sacar las fuentes en vez de pasivarlas.** El error número uno.
+2. **Calcular R_Th con la carga puesta.** La carga se saca en los dos pasos.
+3. **Olvidarse de que R_Th se mide desde los bornes de la carga**, no desde los bornes
+   de la fuente.
+4. **Aplicarlo a un circuito con componentes no lineales.** Thévenin vale para
+   circuitos lineales. Un diodo no lo es.
+
+## Para practicar
+
+1. Con los valores por defecto y la carga en R2, calculá $V_{Th}$ y $R_{Th}$ a mano.
+2. Verificá que la corriente que da el equivalente es la misma que sale del método de
+   nudos del apunte anterior.
+3. Cambiá V1 y V2 y anotá $R_{Th}$ cada vez. ¿Se mueve?
+4. ¿Qué valor de R2 haría que esa rama reciba la máxima potencia posible? ¿Cuánta sería?
+5. Marcá la carga en R4 en vez de R2. ¿Por qué cambia $R_{Th}$?

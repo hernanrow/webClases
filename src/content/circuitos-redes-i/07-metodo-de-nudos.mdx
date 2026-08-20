@@ -1,0 +1,132 @@
+---
+titulo: "Método de nudos"
+unidad: 2
+orden: 2
+resumen: "El método dual del de mallas: conductancias y tensiones de nudo."
+duracion: "2 clases"
+requisitos: ["06-metodo-de-mallas"]
+pdf: true
+---
+
+import Simulador from '../../components/Simulador.astro';
+import Nudos from '../../components/sim/Nudos.tsx';
+
+## El mismo circuito, la otra estrategia
+
+El método de mallas elige como incógnitas unas corrientes imaginarias. El de nudos hace
+lo contrario: elige como incógnitas **las tensiones de los nudos** respecto de un punto
+que se declara cero.
+
+Los dos son igual de válidos. Cuál conviene depende del circuito, y eso lo vemos al
+final.
+
+## La idea
+
+Se elige un nudo como **referencia** —el punto respecto del cual se miden todos los
+demás potenciales— y se le asigna 0 V. Después se plantea la ley de los nudos en cada
+uno de los otros, escribiendo cada corriente como una diferencia de tensiones dividida
+por una resistencia.
+
+Para el nudo A de nuestro circuito, tomando el riel de abajo como referencia:
+
+$$
+\frac{v_A - V_1}{R_1} + \frac{v_A}{R_2} + \frac{v_A - v_B}{R_3} = 0
+$$
+
+Cada término es una corriente que sale de A. La suma da cero porque en un nudo no se
+acumula carga.
+
+## Cómo se arma la matriz
+
+Igual que con mallas, hay una receta que evita pensar cada vez. Con **conductancias**,
+que son las inversas de las resistencias ($G = 1/R$, en siemens):
+
+- **En la diagonal**, la suma de todas las conductancias que llegan a ese nudo.
+- **Fuera de la diagonal**, la conductancia que une los dos nudos, **con signo menos**.
+- **A la derecha**, la corriente que las fuentes inyectan en ese nudo.
+
+$$
+\begin{bmatrix}
+G_1+G_2+G_3 & -G_3 \\
+-G_3 & G_3+G_4+G_5
+\end{bmatrix}
+\begin{bmatrix} v_A \\ v_B \end{bmatrix}
+=
+\begin{bmatrix} V_1 G_1 \\ V_2 G_5 \end{bmatrix}
+$$
+
+Fijate la simetría con el método de mallas: donde allá había resistencias acá hay
+conductancias, donde allá había corrientes acá hay tensiones. Se llaman **métodos
+duales** justamente por eso, y esa dualidad no es una curiosidad: si te acordás de uno,
+tenés el otro.
+
+> **Trabajá en mS y mA.** Las conductancias salen números chiquitos: 1/1000 Ω es
+> 0,001 S. Escribirlo como 1 mS te ahorra arrastrar ceros y equivocarte contándolos.
+
+## Probalo
+
+<Simulador nombre="Método de nudos" ruta="/circuitos-redes-i/07-metodo-de-nudos/" captura="/capturas/07-metodo-de-nudos.png">
+  <Nudos client:visible />
+</Simulador>
+
+## Elegir la referencia
+
+La referencia la elegís vos, y **cualquier elección da el mismo resultado**. Lo que
+cambia son los números de las tensiones; las diferencias entre nudos —y por lo tanto
+las corrientes— quedan idénticas.
+
+En el simulador de arriba probá cambiarla: vas a ver que la tabla de potenciales se
+corre entera, pero la de corrientes no se mueve ni un miliampere.
+
+Entonces, si da lo mismo, ¿por qué elegir bien? Porque **elegir el nudo donde se juntan
+más ramas deja menos ecuaciones**. Si además hay una fuente de tensión conectada
+directamente al nudo de referencia, el otro extremo de esa fuente queda con potencial
+conocido y deja de ser incógnita. Eso puede convertir un sistema de tres ecuaciones en
+uno de dos.
+
+La convención práctica: **el riel de masa, el que aparece dibujado abajo**.
+
+## Cuántas ecuaciones
+
+Con $n$ nudos, hay $n - 1$ ecuaciones independientes. La del último nudo no aporta:
+sale de sumar todas las demás. Es el mismo fenómeno que en la unidad anterior.
+
+En nuestro circuito hay tres nudos —A, B y el riel— así que quedan **dos** ecuaciones.
+Con mallas eran tres. Para este circuito, entonces, nudos da menos trabajo.
+
+## Cuándo conviene cada método
+
+| | Mallas | Nudos |
+|---|---|---|
+| Incógnitas | corrientes de malla | tensiones de nudo |
+| Cantidad de ecuaciones | $r - n + 1$ | $n - 1$ |
+| Conviene cuando | hay pocas mallas | hay pocos nudos |
+| Fuentes cómodas | de tensión | de corriente |
+| Solo sirve si | el circuito es plano | siempre |
+
+La regla práctica: **contá las mallas y contá los nudos menos uno, y elegí el número
+más chico.** Es un segundo de trabajo y te puede ahorrar una ecuación entera.
+
+Ojo con la última fila: el método de mallas necesita que el circuito se pueda dibujar
+sin cruces. El de nudos no tiene esa limitación, y por eso es el que usan los programas
+de simulación.
+
+## Errores frecuentes
+
+1. **Confundir conductancia con resistencia.** En la matriz de nudos van conductancias.
+   Si escribís resistencias, todo queda del revés.
+2. **Olvidar el signo menos** fuera de la diagonal.
+3. **Plantear la ecuación del nudo de referencia.** No aporta nada.
+4. **Sumar mal las corrientes de las fuentes.** El término de la derecha es la corriente
+   que la fuente inyecta: $V/R$, no $V$.
+
+## Para practicar
+
+1. Planteá las dos ecuaciones a mano con los valores por defecto y resolvé el sistema
+   de 2×2. Comparalo con el simulador.
+2. Verificá que las corrientes de rama que salen de acá son las mismas que salieron por
+   mallas en el apunte anterior.
+3. ¿Cuántas ecuaciones necesitarías por nudos si agregaras una resistencia más entre A
+   y el riel? ¿Y por mallas?
+4. Cambiá la referencia al nudo A y anotá los cinco potenciales. ¿Cuál es ahora el
+   potencial del riel de abajo, y qué significa el signo?

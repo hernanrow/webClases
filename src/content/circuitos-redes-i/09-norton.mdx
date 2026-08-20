@@ -1,0 +1,108 @@
+---
+titulo: "Teorema de Norton"
+unidad: 2
+orden: 4
+resumen: "El mismo equivalente que Thévenin, escrito con una fuente de corriente."
+duracion: "1 clase"
+requisitos: ["08-thevenin"]
+pdf: true
+---
+
+import Simulador from '../../components/Simulador.astro';
+import Norton from '../../components/sim/Norton.tsx';
+
+## Qué dice
+
+> **Cualquier circuito lineal, visto desde dos bornes, se comporta igual que una fuente
+> de corriente en paralelo con una resistencia.**
+
+Es la misma frase de Thévenin cambiando «fuente de tensión en serie» por «fuente de
+corriente en paralelo». Y no es una coincidencia: **son el mismo teorema escrito de dos
+maneras**.
+
+## La conversión
+
+$$
+R_N = R_{Th} \qquad\qquad I_N = \frac{V_{Th}}{R_{Th}}
+$$
+
+y para volver:
+
+$$
+V_{Th} = I_N \cdot R_N
+$$
+
+La resistencia es la misma en los dos. Lo único que cambia es cómo expresás la fuente.
+
+Fijate que la conversión es la ley de Ohm aplicada al equivalente. No hay nada nuevo
+que memorizar: si te acordás de Thévenin, ya tenés Norton.
+
+## Qué es I_N físicamente
+
+$I_N$ es la **corriente de cortocircuito**: la que circularía si uniéramos los dos
+bornes de la carga con un cable.
+
+Tiene sentido con el equivalente de Thévenin a la vista: si ponés un cortocircuito,
+$R_L = 0$, y entonces $I = V_{Th}/R_{Th}$. Que es exactamente $I_N$.
+
+Eso da un método directo, sin pasar por Thévenin: **cortocircuitá la rama de la carga y
+calculá la corriente que circula por ese cable.** Esa es $I_N$.
+
+> **Un atajo útil para R_Th.** Si conocés $V_{Th}$ (tensión a circuito abierto) e $I_N$
+> (corriente de cortocircuito), entonces $R_{Th} = V_{Th} / I_N$ sin necesidad de
+> pasivar nada. En el laboratorio es la forma práctica de medir la resistencia interna
+> de una fuente: medís en vacío, medís en corto, dividís.
+
+## Probalo
+
+<Simulador nombre="Equivalente de Norton" ruta="/circuitos-redes-i/09-norton/" captura="/capturas/09-norton.png">
+  <Norton client:visible />
+</Simulador>
+
+## La carga, con divisor de corriente
+
+En el equivalente de Norton la carga está **en paralelo** con $R_N$, así que la
+corriente de la fuente se reparte entre las dos ramas:
+
+$$
+I_L = I_N \cdot \frac{R_N}{R_N + R_L}
+$$
+
+Ojo con esta fórmula: en un divisor de **corriente**, cada rama se lleva la parte
+proporcional a la resistencia **de la otra**. Es al revés que en el divisor de tensión,
+y es un error clásico.
+
+Lo razonable: por la rama de menor resistencia circula **más** corriente. Si la fórmula
+que escribiste dice lo contrario, está dada vuelta.
+
+## Cuál usar
+
+Para una sola carga, **da exactamente lo mismo**. Elegí el que te salga más rápido.
+
+Conviene Thévenin cuando vas a conectar cosas **en serie** con el equivalente, y Norton
+cuando vas a conectar cosas **en paralelo**: en cada caso te ahorrás una conversión.
+
+En electrónica hay una costumbre práctica: las fuentes de alimentación se piensan como
+Thévenin (una tensión con su resistencia interna) y los transistores en régimen activo
+como Norton (una corriente controlada). No es una regla, es que en cada caso el modelo
+cae más natural.
+
+## Errores frecuentes
+
+1. **Poner R_N en serie.** En Norton va en paralelo. Si la ponés en serie con una fuente
+   de corriente no cambia nada, porque una fuente de corriente ideal impone su corriente
+   sin importar lo que tenga en serie.
+2. **Dar vuelta el divisor de corriente.**
+3. **Pensar que I_N es la corriente por la carga.** Es la de cortocircuito, o sea con la
+   carga reemplazada por un cable. Con la carga puesta circula menos.
+4. **Pasivar mal las fuentes** al calcular $R_N$. Mismo cuidado que en Thévenin.
+
+## Para practicar
+
+1. Calculá $I_N$ y $R_N$ a mano para la carga en R2 y comparalos con el simulador.
+2. Verificá que $I_N \cdot R_N$ te da el mismo $V_{Th}$ del apunte anterior.
+3. Aplicá el divisor de corriente y comprobá que la corriente por R2 coincide con la que
+   dieron mallas, nudos y Thévenin.
+4. ¿Cuánto vale la corriente por la carga si $R_L = R_N$? ¿Y qué fracción de $I_N$ es?
+5. Una batería de auto en vacío mide 12,6 V y en cortocircuito daría unos 600 A. ¿Cuál
+   es su resistencia interna? ¿Por qué no conviene hacer esa medición de verdad?

@@ -916,3 +916,260 @@ main {
 .ecuacion--mal .ecuacion__resto {
   color: var(--u2);
 }
+
+/* --- Circuito base de la Unidad 2 --- */
+
+.esquema__svg--base {
+  max-width: 26rem;
+  margin-bottom: 1.1rem;
+}
+
+/* La rama marcada como carga en Thévenin y Norton. */
+.resistencia-simbolo--carga {
+  stroke: var(--verde-senal);
+  stroke-width: 3;
+}
+
+/* Una fuente apagada es un cortocircuito: se dibuja el cable más grueso
+   para que se vea que ahí ya no hay fuente. */
+.esquema__svg .hilo-corto {
+  stroke: var(--tinta);
+  stroke-width: 4;
+  stroke-linecap: square;
+}
+
+.esquema__svg .rotulo-apagada {
+  font-family: var(--mono);
+  font-size: 9px;
+  fill: var(--tinta-3);
+}
+
+.esquema__svg .referencia line {
+  stroke: var(--tinta);
+  stroke-width: 2;
+}
+
+.esquema__svg .malla__arco {
+  fill: none;
+  stroke: var(--tinta-3);
+  stroke-width: 1.5;
+  stroke-dasharray: 3 2;
+}
+
+.esquema__svg .malla__punta {
+  fill: var(--tinta-3);
+}
+
+.esquema__svg .malla__rotulo {
+  font-family: var(--mono);
+  font-size: 11px;
+  fill: var(--tinta-2);
+}
+
+/* --- Matrices --- */
+
+.matriz {
+  display: flex;
+  align-items: stretch;
+  gap: 0.5rem;
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.82rem;
+  overflow-x: auto;
+  padding-block: 0.3rem;
+}
+
+.matriz__llave {
+  border-left: 2px solid var(--tinta);
+  border-top: 2px solid var(--tinta);
+  border-bottom: 2px solid var(--tinta);
+  width: 0.4rem;
+  flex: 0 0 0.4rem;
+}
+
+.matriz__llave--der {
+  border-left: 0;
+  border-right: 2px solid var(--tinta);
+}
+
+.matriz__celdas {
+  display: grid;
+  gap: 0.25rem 0.9rem;
+  padding-block: 0.35rem;
+}
+
+.matriz__celda {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.matriz__grupo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.matriz__signo {
+  font-family: var(--mono);
+  color: var(--tinta-2);
+}
+
+.sistema {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 0.9rem;
+  margin-block: 1.2rem;
+}
+
+/* --- Resultados por rama --- */
+
+.ramas {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  margin-top: 1.3rem;
+}
+
+.ramas th,
+.ramas td {
+  border-bottom: 1px solid var(--filete);
+  padding: 0.4rem 0.6rem 0.4rem 0;
+  text-align: left;
+}
+
+.ramas th {
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  text-transform: uppercase;
+  letter-spacing: 0.11em;
+  color: var(--tinta-3);
+  font-weight: 400;
+  border-bottom-color: var(--filete-fuerte);
+}
+
+.ramas td.num,
+.ramas th.num {
+  text-align: right;
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.ramas tr:last-child td {
+  border-bottom: 0;
+}
+
+/* Cuando dos métodos se comparan lado a lado. */
+.coincide {
+  color: var(--verde-senal);
+}
+
+/* --- Subtítulo dentro de un simulador --- */
+
+.sim__subtitulo {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  font-weight: 400;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--tinta-3);
+  margin: 1.6rem 0 0.6rem;
+}
+
+/* --- Slider --- */
+
+.campo input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  border: 0;
+  width: 100%;
+  height: 1.6rem;
+  padding: 0;
+  cursor: pointer;
+}
+
+.campo input[type='range']::-webkit-slider-runnable-track {
+  height: 2px;
+  background: var(--filete-fuerte);
+}
+
+.campo input[type='range']::-moz-range-track {
+  height: 2px;
+  background: var(--filete-fuerte);
+}
+
+/* Blanco de toque de 28 px: el pulgar en una pantalla de 360 px. */
+.campo input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 1.75rem;
+  height: 1.75rem;
+  margin-top: -0.85rem;
+  border-radius: 50%;
+  background: var(--tinta);
+  border: 0;
+}
+
+.campo input[type='range']::-moz-range-thumb {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  background: var(--tinta);
+  border: 0;
+}
+
+/* --- Curva de potencia --- */
+
+.curva {
+  display: block;
+  width: 100%;
+  max-width: 24rem;
+  height: auto;
+  margin: 0 auto 0.4rem;
+}
+
+.curva__eje {
+  stroke: var(--filete-fuerte);
+  stroke-width: 1;
+}
+
+.curva__trazo {
+  fill: none;
+  stroke: var(--tinta);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.curva__marca {
+  stroke: var(--verde-senal);
+  stroke-width: 1.5;
+  stroke-dasharray: 3 3;
+}
+
+.curva__cursor {
+  stroke: var(--tinta-3);
+  stroke-width: 1;
+}
+
+.curva__rotulo {
+  font-family: var(--mono);
+  font-size: 9px;
+  fill: var(--tinta-3);
+}
+
+/* Fuente de corriente, simbología IEC: círculo con flecha. */
+.esquema__svg .fuente-corriente {
+  fill: none;
+  stroke: var(--tinta);
+  stroke-width: 2;
+}
+
+.esquema__svg .fuente-corriente__flecha {
+  stroke: var(--tinta);
+  stroke-width: 2;
+}
+
+.esquema__svg .fuente-corriente__punta {
+  fill: var(--tinta);
+}

@@ -1,0 +1,147 @@
+---
+titulo: "Método de mallas"
+unidad: 2
+orden: 1
+resumen: "Plantear el sistema a partir de las mallas y resolverlo por Cramer."
+duracion: "2 clases"
+requisitos: ["05-leyes-de-kirchhoff"]
+pdf: true
+---
+
+import Simulador from '../../components/Simulador.astro';
+import Mallas from '../../components/sim/Mallas.tsx';
+
+## El circuito de toda la unidad
+
+Los cinco métodos de esta unidad se aplican **sobre el mismo circuito**. No es
+casualidad ni pereza: el objetivo es que veas con tus propios ojos que los cinco dan el
+mismo resultado. Son cinco caminos, no cinco respuestas.
+
+Dos fuentes, cinco resistencias, dos nudos y tres mallas:
+
+```
+    ┌──R1──A──R3──B──R5──┐
+    │      │      │      │
+   (V1)   R2     R4     (V2)
+    │      │      │      │
+    └──────┴──────┴──────┘
+```
+
+Con Kirchhoff a secas tendrías que plantear cinco ecuaciones, una por corriente de
+rama. Los métodos de esta unidad son formas de **plantear menos ecuaciones** sin perder
+información.
+
+## La idea del método
+
+En vez de trabajar con las corrientes de rama, se inventan **corrientes de malla**:
+una corriente imaginaria que circula por cada camino cerrado. No son corrientes reales
+—nadie puede medirlas con un amperímetro—, pero de ellas salen todas las reales.
+
+La ventaja: donde había cinco incógnitas de rama, ahora hay tres de malla. Y la ley de
+los nudos se cumple sola, porque cada corriente de malla entra y sale de cada nudo por
+donde pasa. **Una ley menos que plantear.**
+
+## Cómo se arma la matriz
+
+Se eligen todas las mallas en el mismo sentido, por convención **horario**. Después la
+matriz se escribe casi sin pensar:
+
+- **En la diagonal**, la suma de todas las resistencias de esa malla.
+- **Fuera de la diagonal**, la resistencia que comparten las dos mallas, **con signo
+  menos**. El menos viene de que las dos corrientes la atraviesan en sentidos
+  opuestos.
+- **Si dos mallas no se tocan**, ese término es cero.
+
+$$
+\begin{bmatrix}
+R_1+R_2 & -R_2 & 0 \\
+-R_2 & R_2+R_3+R_4 & -R_4 \\
+0 & -R_4 & R_4+R_5
+\end{bmatrix}
+\begin{bmatrix} I_1 \\ I_2 \\ I_3 \end{bmatrix}
+=
+\begin{bmatrix} V_1 \\ 0 \\ -V_2 \end{bmatrix}
+$$
+
+Del lado derecho van las fuentes de cada malla: con signo más si empujan a favor del
+sentido elegido, con menos si empujan en contra. La malla del medio no tiene fuente,
+por eso ese término es cero.
+
+> **La matriz siempre es simétrica.** El valor de la fila 1 columna 2 es el mismo que
+> el de la fila 2 columna 1, porque es la misma resistencia compartida vista desde las
+> dos mallas. Si te queda asimétrica, hay un error: revisá antes de resolver.
+
+## Probalo
+
+Cambiá los valores y mirá cómo se rearma la matriz, cómo salen los determinantes y cómo
+las corrientes de malla se convierten en corrientes de rama.
+
+<Simulador nombre="Método de mallas" ruta="/circuitos-redes-i/06-metodo-de-mallas/" captura="/capturas/06-metodo-de-mallas.png">
+  <Mallas client:visible />
+</Simulador>
+
+## Resolver por Cramer
+
+Con tres incógnitas, Cramer es cómodo y no requiere acordarse de nada más que
+determinantes.
+
+1. Se calcula **Δ**, el determinante de la matriz de resistencias.
+2. Para cada incógnita, se arma una matriz nueva reemplazando **su columna** por el
+   vector de la derecha, y se calcula su determinante: Δ₁, Δ₂, Δ₃.
+3. Cada corriente es el cociente:
+
+$$
+I_1 = \frac{\Delta_1}{\Delta} \qquad
+I_2 = \frac{\Delta_2}{\Delta} \qquad
+I_3 = \frac{\Delta_3}{\Delta}
+$$
+
+Si **Δ = 0**, el sistema no tiene solución única. En un circuito eso significa que las
+mallas que elegiste no son independientes: elegiste dos veces el mismo camino, o uno
+que es la suma de otros dos.
+
+## De corrientes de malla a corrientes de rama
+
+Este es el paso que más se olvida, y sin él el resultado no sirve.
+
+- Una resistencia que pertenece a **una sola malla** lleva esa corriente de malla tal
+  cual. Por R1 circula I₁.
+- Una resistencia **compartida** lleva la **diferencia** de las dos corrientes de malla
+  que la atraviesan. Por R2 circula I₁ − I₂.
+
+El sentido de esa diferencia depende de cuál malla tomes como positiva; mientras seas
+consistente, un signo negativo solo te dice que la corriente va al revés.
+
+## Cuántas mallas hay
+
+Para un circuito plano, la cantidad de mallas independientes es:
+
+$$
+m = r - n + 1
+$$
+
+con $r$ ramas y $n$ nudos. En nuestro circuito: 5 ramas y 2 nudos (más la referencia,
+pero el riel de abajo es un solo nudo eléctrico) → contando bien salen 3 mallas. Son
+exactamente las tres "ventanas" que se ven dibujadas.
+
+Para no equivocarte: **las mallas son las ventanas del dibujo**, los huecos que quedan
+si pensás el esquema como una reja. Ni más ni menos.
+
+## Errores frecuentes
+
+1. **Mezclar sentidos.** Si una malla la recorrés en horario y otra en antihorario, los
+   signos fuera de la diagonal dejan de ser todos negativos y te vas a perder. Todas en
+   el mismo sentido.
+2. **Olvidar el signo de la fuente.** Depende de si la atravesás del − al + o al revés
+   siguiendo tu sentido de recorrido.
+3. **Quedarse en las corrientes de malla.** Lo que te van a pedir son las de rama.
+4. **Contar mal las mallas.** Un camino cerrado que rodea a otras dos ventanas no es
+   una malla independiente.
+
+## Para practicar
+
+1. Con los valores por defecto, planteá la matriz a mano y comparala con la del
+   simulador.
+2. Calculá Δ desarrollando el determinante 3×3 y verificá.
+3. Poné V2 = 0 y mirá qué pasa con I₃. ¿Por qué no da cero?
+4. Poné R3 muy grande, digamos 1 MΩ. ¿Qué pasa con I₂ y por qué tiene sentido?

@@ -1,0 +1,116 @@
+---
+titulo: "Teorema de superposición"
+unidad: 2
+orden: 5
+resumen: "Una fuente por vez, y después se suma. Y por qué con las potencias no se puede."
+duracion: "1 clase"
+requisitos: ["05-leyes-de-kirchhoff"]
+pdf: true
+---
+
+import Simulador from '../../components/Simulador.astro';
+import Superposicion from '../../components/sim/Superposicion.tsx';
+
+## Qué dice
+
+> **En un circuito lineal con varias fuentes, la corriente en cualquier rama es la suma
+> de las corrientes que produciría cada fuente actuando sola, con las demás pasivadas.**
+
+Dicho de otro modo: las fuentes no se estorban ni se ayudan. Cada una hace lo suyo como
+si las demás no existieran, y lo que medís es la suma.
+
+## Cómo se aplica
+
+1. Se apagan **todas** las fuentes menos una. Pasivar es lo mismo que en Thévenin: las
+   de tensión en **cortocircuito**, las de corriente en **circuito abierto**.
+2. Se resuelve ese circuito, que quedó más simple, y se anotan las corrientes.
+3. Se repite con cada fuente.
+4. Se **suman algebraicamente** los aportes, respetando los signos.
+
+El paso 4 es donde importa el «algebraicamente»: los aportes pueden ir en sentidos
+opuestos y restarse. Si sumás módulos sin mirar signos, el resultado da mal.
+
+## Probalo
+
+Apagá una fuente por vez y mirá cómo se redibuja el esquema. La tabla de abajo muestra
+los dos aportes por separado y su suma.
+
+<Simulador nombre="Superposición" ruta="/circuitos-redes-i/10-superposicion/" captura="/capturas/10-superposicion.png">
+  <Superposicion client:visible />
+</Simulador>
+
+Fijate en una cosa mientras jugás: **apagar una fuente de tensión no es sacarla**. El
+cable sigue ahí, y por esa rama sigue circulando corriente. Es la confusión más común
+del tema, y por eso el esquema se redibuja con el cortocircuito bien visible.
+
+## Por qué funciona
+
+Porque el circuito es **lineal**: las resistencias cumplen $V = IR$ con $R$ constante,
+sin importar cuánta corriente circule. En un sistema así, duplicar una entrada duplica
+su efecto, y las respuestas a varias entradas se suman.
+
+Probalo en el simulador: duplicá V1 y mirá la columna «Solo V1». Se duplica exacto.
+
+Esa propiedad se rompe apenas aparece un componente no lineal. Con un diodo, un
+transistor en zona no lineal o una lámpara incandescente —cuya resistencia cambia con la
+temperatura, o sea con la corriente— **superposición no se puede aplicar**. Es la
+limitación más importante del método y la razón por la que en electrónica se usa menos
+de lo que uno esperaría.
+
+## Con las potencias no se puede
+
+Este es el punto que hay que entender de verdad, porque es contraintuitivo y aparece
+siempre en las evaluaciones.
+
+Las **corrientes** se superponen. Las **potencias no**.
+
+La razón es puro álgebra. Si $I = I_A + I_B$, entonces:
+
+$$
+P = I^2 R = (I_A + I_B)^2 R = (I_A^2 + 2 I_A I_B + I_B^2) R
+$$
+
+mientras que sumar las potencias por separado daría:
+
+$$
+P_A + P_B = I_A^2 R + I_B^2 R
+$$
+
+Sobra el término $2 I_A I_B R$. **El cuadrado de una suma no es la suma de los
+cuadrados**, y la potencia va con el cuadrado.
+
+Un ejemplo con números redondos: si una fuente sola produce 1 A por una resistencia de
+1 Ω y la otra sola también produce 1 A, cada una disipa 1 W. Pero juntas producen 2 A,
+que disipan 4 W, no 2 W.
+
+**La regla práctica:** para calcular una potencia, primero sumá las corrientes y recién
+después elevá al cuadrado. Nunca al revés.
+
+## Cuándo conviene
+
+Superposición casi nunca es el camino más corto para resolver un circuito entero: si
+hay dos fuentes, resolvés dos circuitos en vez de uno.
+
+Su valor es otro, y es conceptual: te dice **cuánto aporta cada fuente**. Eso es lo que
+importa cuando querés saber si el ruido de una línea de alimentación llega a la salida,
+o cuánto pesa cada generador en una red. En electrónica es la base para separar el
+**análisis en continua** del **análisis en alterna** de un mismo amplificador: se
+resuelve la polarización con la señal apagada y la señal con la polarización apagada, y
+se suma.
+
+## Errores frecuentes
+
+1. **Sacar la fuente en vez de cortocircuitarla.** El error de siempre.
+2. **Sumar potencias.** No.
+3. **Sumar módulos sin mirar los signos.** La suma es algebraica.
+4. **Aplicarlo a un circuito con componentes no lineales.** No vale.
+
+## Para practicar
+
+1. Con los valores por defecto, calculá el aporte de V1 sola a la corriente por R3.
+   Después el de V2 sola. Sumalos y verificá contra el resultado de mallas.
+2. Encontrá valores de V1 y V2 que hagan que por R3 no circule corriente. ¿Qué relación
+   tienen que cumplir?
+3. Calculá la potencia en R2 de las dos maneras: sumando potencias parciales y sumando
+   corrientes primero. Compará y explicá la diferencia.
+4. ¿Qué pasa con los aportes si invertís el signo de V2? ¿Y con la suma?
