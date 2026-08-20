@@ -1,0 +1,23 @@
+---
+interface Eslabon {
+  texto: string;
+  href?: string;
+}
+interface Props {
+  eslabones: Eslabon[];
+}
+const { eslabones } = Astro.props;
+---
+
+<nav class="migas" aria-label="Ruta de navegación">
+  <div class="envoltura">
+    {
+      eslabones.map((e, i) => (
+        <>
+          {i > 0 && <span aria-hidden="true"> / </span>}
+          {e.href ? <a href={e.href}>{e.texto}</a> : <span aria-current="page">{e.texto}</span>}
+        </>
+      ))
+    }
+  </div>
+</nav>

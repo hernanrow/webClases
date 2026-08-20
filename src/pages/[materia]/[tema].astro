@@ -1,0 +1,139 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Migas from '../../components/layout/Migas.astro';
+import { colorUnidad } from '../../lib/unidades';
+
+export const getStaticPaths = (async () => {
+  const materias = await getCollection('materias');
+  const apuntes = await getCollection('apuntes');
+
+  return materias.flatMap((materia) => {
+    const deLaMateria = apuntes
+      .filter((a) => a.id.split('/')[0] === materia.id)
+      .sort((a, b) => a.data.unidad - b.data.unidad || a.data.orden - b.data.orden);
+
+    return deLaMateria.map((entrada, i) => ({
+      params: { materia: materia.id, tema: entrada.id.split('/')[1]! },
+      props: {
+        materia,
+        entrada,
+        anterior: deLaMateria[i - 1] ?? null,
+        siguiente: deLaMateria[i + 1] ?? null,
+      },
+    }));
+  });
+}) satisfies GetStaticPaths;
+
+const { materia, entrada, anterior, siguiente } = Astro.props;
+const { Content } = await render(entrada);
+
+const datos = entrada.data;
+const unidad = materia.data.unidades.find((u) => u.numero === datos.unidad);
+const color = colorUnidad(datos.unidad);
+
+const slugDe = (e: typeof entrada) => e.id.split('/')[1]!;
+
+// Los requisitos son slugs; se resuelven contra los apuntes de la misma materia.
+const apuntes = await getCollection('apuntes');
+const requisitos = datos.requisitos.map((slug) => {
+  const previo = apuntes.find((a) => a.id === `${materia.id}/${slug}`);
+  if (!previo) {
+    throw new Error(
+      `${entrada.id}.mdx pide el requisito "${slug}", que no existe en ` +
+        `src/content/${materia.id}/.`,
+    );
+  }
+  return { slug, titulo: previo.data.titulo };
+});
+---
+
+<Base
+  titulo={`${datos.titulo} — ${materia.data.nombre}`}
+  descripcion={datos.resumen}
+  colorUnidad={color}
+  materia={materia.data.nombre}
+  curso={materia.data.curso}
+  hrefMateria={`/${materia.id}/`}
+>
+  <Migas
+    slot="migas"
+    eslabones={[
+      { texto: 'Inicio', href: '/' },
+      { texto: materia.data.nombre, href: `/${materia.id}/` },
+      { texto: datos.titulo },
+    ]}
+  />
+
+  <p class="unidad__numero">
+    Unidad {datos.unidad} — {unidad?.nombre}
+  </p>
+  <h1>{datos.titulo}</h1>
+  <p>{datos.resumen}</p>
+
+  <div class="ficha">
+    <dl>
+      <dt>Duración</dt>
+      <dd class="num">{datos.duracion}</dd>
+
+      <dt>Requisitos</dt>
+      <dd>
+        {
+          requisitos.length === 0 ? (
+            'Ninguno'
+          ) : (
+            requisitos.map((r, i) => (
+              <>
+                {i > 0 && ', '}
+                <a href={`/${materia.id}/${r.slug}/`}>{r.titulo}</a>
+              </>
+            ))
+          )
+        }
+      </dd>
+
+      {
+        datos.descargas.length > 0 && (
+          <>
+            <dt>Descargas</dt>
+            <dd>
+              <ul class="descargas">
+                {datos.descargas.map((d) => (
+                  <li>
+                    <a href={d.archivo}>{d.titulo}</a>
+                  </li>
+                ))}
+              </ul>
+            </dd>
+          </>
+        )
+      }
+    </dl>
+  </div>
+
+  <article class="apunte">
+    <Content />
+  </article>
+
+  <nav class="paginacion" aria-label="Temas contiguos">
+    {
+      anterior ? (
+        <a href={`/${materia.id}/${slugDe(anterior)}/`} rel="prev">
+          <span class="paginacion__rotulo">← Anterior</span>
+          {anterior.data.titulo}
+        </a>
+      ) : (
+        <span />
+      )
+    }
+    {
+      siguiente && (
+        <a href={`/${materia.id}/${slugDe(siguiente)}/`} rel="next" style="text-align: right">
+          <span class="paginacion__rotulo">Siguiente →</span>
+          {siguiente.data.titulo}
+        </a>
+      )
+    }
+  </nav>
+</Base>

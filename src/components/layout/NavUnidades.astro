@@ -1,0 +1,60 @@
+---
+import { colorUnidad } from '../../lib/unidades';
+
+export interface TemaResumen {
+  slug: string;
+  titulo: string;
+  resumen: string;
+  duracion: string;
+  unidad: number;
+  orden: number;
+}
+
+interface Props {
+  materiaSlug: string;
+  unidades: { numero: number; nombre: string }[];
+  temas: TemaResumen[];
+  actual?: string;
+}
+
+const { materiaSlug, unidades, temas, actual } = Astro.props;
+---
+
+<nav aria-label="Unidades de la materia">
+  {
+    unidades.map((u) => {
+      const deLaUnidad = temas
+        .filter((t) => t.unidad === u.numero)
+        .sort((a, b) => a.orden - b.orden);
+
+      return (
+        <section class="unidad" style={`--color-unidad: ${colorUnidad(u.numero)}`}>
+          <div class="unidad__rotulo">
+            <span class="unidad__numero">Unidad {u.numero}</span>
+            <h2 class="unidad__nombre">{u.nombre}</h2>
+          </div>
+
+          {deLaUnidad.length === 0 ? (
+            <p class="vacio">Todavía no hay apuntes cargados en esta unidad.</p>
+          ) : (
+            <ul class="temas">
+              {deLaUnidad.map((t) => (
+                <li>
+                  <a
+                    class="tema"
+                    href={`/${materiaSlug}/${t.slug}/`}
+                    aria-current={actual === t.slug ? 'page' : undefined}
+                  >
+                    <span class="tema__titulo">{t.titulo}</span>
+                    <p class="tema__resumen">{t.resumen}</p>
+                    <p class="tema__meta">{t.duracion}</p>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      );
+    })
+  }
+</nav>

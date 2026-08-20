@@ -1,0 +1,64 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Migas from '../../components/layout/Migas.astro';
+import NavUnidades from '../../components/layout/NavUnidades.astro';
+
+export const getStaticPaths = (async () => {
+  const materias = await getCollection('materias');
+  const apuntes = await getCollection('apuntes');
+
+  return materias.map((materia) => ({
+    params: { materia: materia.id },
+    props: {
+      materia,
+      temas: apuntes
+        .filter((a) => a.id.split('/')[0] === materia.id)
+        .map((a) => ({
+          slug: a.id.split('/')[1]!,
+          titulo: a.data.titulo,
+          resumen: a.data.resumen,
+          duracion: a.data.duracion,
+          unidad: a.data.unidad,
+          orden: a.data.orden,
+        })),
+    },
+  }));
+}) satisfies GetStaticPaths;
+
+const { materia, temas } = Astro.props;
+
+// El frontmatter dice `unidad: N`; si ese N no está en materia.json es un error de
+// tipeo y tiene que romper el build, no publicar un tema que no se ve en ningún lado.
+const numeros = new Set(materia.data.unidades.map((u) => u.numero));
+for (const t of temas) {
+  if (!numeros.has(t.unidad)) {
+    throw new Error(
+      `${materia.id}/${t.slug}.mdx declara "unidad: ${t.unidad}", que no existe en ` +
+        `src/content/${materia.id}/materia.json. Unidades válidas: ${[...numeros].join(', ')}.`,
+    );
+  }
+}
+---
+
+<Base
+  titulo={`${materia.data.nombre} — EEST N° 2073 «San Pablo»`}
+  descripcion={materia.data.resumen}
+  materia={materia.data.nombre}
+  curso={materia.data.curso}
+>
+  <Migas
+    slot="migas"
+    eslabones={[{ texto: 'Inicio', href: '/' }, { texto: materia.data.nombre }]}
+  />
+
+  <h1>{materia.data.nombre}</h1>
+  <p>{materia.data.resumen}</p>
+
+  <NavUnidades
+    materiaSlug={materia.id}
+    unidades={materia.data.unidades}
+    temas={temas}
+  />
+</Base>

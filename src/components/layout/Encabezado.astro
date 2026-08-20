@@ -1,0 +1,22 @@
+---
+interface Props {
+  materia?: string;
+  curso?: string;
+  hrefMateria?: string;
+}
+const { materia, curso, hrefMateria } = Astro.props;
+---
+
+<header class="encabezado">
+  <div class="envoltura encabezado__interior">
+    <a class="encabezado__escuela" href="/">EEST N° 2073 «San Pablo»</a>
+    {
+      materia && (
+        <span class="encabezado__materia">
+          {hrefMateria ? <a href={hrefMateria}>{materia}</a> : materia}
+          {curso && ` · ${curso}`}
+        </span>
+      )
+    }
+  </div>
+</header>

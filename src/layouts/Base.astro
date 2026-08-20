@@ -1,0 +1,50 @@
+---
+import 'katex/dist/katex.min.css';
+import '../styles/tipografia.css';
+import '../styles/global.css';
+
+import Encabezado from '../components/layout/Encabezado.astro';
+
+interface Props {
+  titulo: string;
+  descripcion: string;
+  colorUnidad?: string;
+  materia?: string;
+  curso?: string;
+  hrefMateria?: string;
+}
+
+const { titulo, descripcion, colorUnidad, materia, curso, hrefMateria } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es-AR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titulo}</title>
+    <meta name="description" content={descripcion} />
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    <meta name="theme-color" content="#1c1f24" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f2f3f5" media="(prefers-color-scheme: light)" />
+  </head>
+  <body style={colorUnidad ? `--color-unidad: ${colorUnidad}` : undefined}>
+    <a class="saltar" href="#contenido">Saltar al contenido</a>
+    {colorUnidad && <div class="banda-unidad" aria-hidden="true"></div>}
+    <Encabezado materia={materia} curso={curso} hrefMateria={hrefMateria} />
+    <slot name="migas" />
+    <main id="contenido">
+      <div class="envoltura">
+        <slot />
+      </div>
+    </main>
+    <footer class="pie">
+      <div class="envoltura">
+        <p>
+          Material de cátedra — EEST N° 2073 «San Pablo». Sitio estático: no guarda ni
+          envía ningún dato de quien lo usa.
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>

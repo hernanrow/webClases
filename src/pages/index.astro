@@ -1,0 +1,48 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+
+const materias = (await getCollection('materias')).sort((a, b) =>
+  a.data.nombre.localeCompare(b.data.nombre, 'es'),
+);
+const apuntes = await getCollection('apuntes');
+
+const cantidadPorMateria = (slug: string) =>
+  apuntes.filter((a) => a.id.split('/')[0] === slug).length;
+---
+
+<Base
+  titulo="Apuntes y simuladores — EEST N° 2073 «San Pablo»"
+  descripcion="Apuntes, ejercitación y simuladores interactivos de las materias técnicas de la EEST N° 2073 «San Pablo»."
+>
+  <h1>Apuntes y simuladores</h1>
+  <p>
+    Material de las materias técnicas de la escuela. Cada tema se lee desde el celular y
+    trae los simuladores para probar los circuitos.
+  </p>
+
+  <nav aria-label="Materias">
+    {
+      materias.map((m) => (
+        <section class="unidad" style="--color-unidad: var(--u1)">
+          <div class="unidad__rotulo">
+            <span class="unidad__numero">{m.data.curso}</span>
+            <h2 class="unidad__nombre">{m.data.nombre}</h2>
+          </div>
+          <ul class="temas">
+            <li>
+              <a class="tema" href={`/${m.id}/`}>
+                <span class="tema__titulo">Ver las unidades</span>
+                <p class="tema__resumen">{m.data.resumen}</p>
+                <p class="tema__meta">
+                  {cantidadPorMateria(m.id)} apunte{cantidadPorMateria(m.id) === 1 ? '' : 's'} ·{' '}
+                  {m.data.unidades.length} unidades
+                </p>
+              </a>
+            </li>
+          </ul>
+        </section>
+      ))
+    }
+  </nav>
+</Base>

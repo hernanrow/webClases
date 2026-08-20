@@ -1,0 +1,11 @@
+{
+  "nombre": "Circuitos y Redes I",
+  "curso": "4to año A — Técnico Electrónico",
+  "resumen": "Análisis de circuitos de corriente continua y alterna: desde la ley de Ohm hasta la resonancia y la potencia en CA.",
+  "unidades": [
+    { "numero": 1, "nombre": "Circuitos en corriente continua" },
+    { "numero": 2, "nombre": "Métodos de resolución" },
+    { "numero": 3, "nombre": "Análisis de CA senoidal" },
+    { "numero": 4, "nombre": "Circuitos en CA" }
+  ]
+}

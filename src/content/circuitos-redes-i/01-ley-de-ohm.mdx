@@ -1,0 +1,104 @@
+---
+titulo: "Ley de Ohm"
+unidad: 1
+orden: 1
+resumen: "La relación entre tensión, corriente y resistencia, y la potencia que disipa un componente."
+duracion: "2 clases"
+requisitos: []
+pdf: true
+---
+
+## De qué se trata
+
+Si conectás una resistencia a una fuente y vas subiendo la tensión, la corriente sube
+en la misma proporción. Duplicás la tensión, se duplica la corriente. Eso es todo lo
+que dice la ley de Ohm, y es la herramienta que vas a usar en cada circuito de acá en
+adelante.
+
+$$
+V = I \cdot R
+$$
+
+donde $V$ está en volt (V), $I$ en ampere (A) y $R$ en ohm (Ω).
+
+De la misma expresión salen las otras dos formas, que son la misma ecuación despejada:
+
+$$
+I = \frac{V}{R}
+\qquad\qquad
+R = \frac{V}{I}
+$$
+
+> **Cuidado con las unidades.** Si la resistencia está en kΩ y la tensión en V, la
+> corriente te va a dar en mA. No es magia: 1 V / 1 kΩ = 1 mA. Trabajar en kΩ–V–mA te
+> ahorra ceros y es lo que vas a usar el 90 % del tiempo en electrónica.
+
+## Un ejemplo resuelto
+
+Una resistencia de 220 Ω conectada a una fuente de 9 V.
+
+$$
+I = \frac{V}{R} = \frac{9\ \text{V}}{220\ \Omega} = 0{,}0409\ \text{A} = 40{,}9\ \text{mA}
+$$
+
+Fijate que el resultado se expresa en mA y no en 0,0409 A. La **notación ingenieril**
+—exponentes múltiplos de 3, con el prefijo del SI— es la que se usa en la práctica y
+la que vamos a pedir en las evaluaciones.
+
+## Potencia
+
+Toda resistencia por la que circula corriente disipa energía en forma de calor. La
+potencia es el producto de la tensión que cae en ella por la corriente que la atraviesa:
+
+$$
+P = V \cdot I
+$$
+
+Reemplazando con la ley de Ohm salen las dos formas equivalentes, que sirven según qué
+dato tengas a mano:
+
+$$
+P = I^2 \cdot R
+\qquad\qquad
+P = \frac{V^2}{R}
+$$
+
+Siguiendo el ejemplo anterior:
+
+$$
+P = V \cdot I = 9\ \text{V} \cdot 0{,}0409\ \text{A} = 0{,}368\ \text{W} = 368\ \text{mW}
+$$
+
+Esto importa en la práctica: una resistencia de 1/4 W (250 mW) puesta ahí **se quema**.
+Hay que usar una de 1/2 W. El valor óhmico no es lo único que se elige cuando comprás
+un componente.
+
+## Tabla de referencia
+
+| Si conocés | Tensión | Corriente | Resistencia | Potencia |
+|---|---|---|---|---|
+| $I$ y $R$ | $V = I R$ | — | — | $P = I^2 R$ |
+| $V$ y $R$ | — | $I = V/R$ | — | $P = V^2/R$ |
+| $V$ y $I$ | — | — | $R = V/I$ | $P = V I$ |
+
+## Errores frecuentes
+
+1. **Mezclar unidades.** Pasar todo a las unidades base (V, A, Ω) antes de operar, o
+   trabajar consistentemente en kΩ–V–mA. Lo que no se puede es mezclar.
+2. **Confundir la tensión de la fuente con la tensión sobre la resistencia.** En un
+   circuito con una sola resistencia son la misma; apenas hay dos o más, no.
+3. **Redondear demasiado pronto.** Arrastrá los decimales hasta el final y recién ahí
+   redondeá a tres cifras significativas.
+
+## Para practicar
+
+Calculá lo que falta en cada caso:
+
+- $V = 12$ V, $R = 470$ Ω → $I$ y $P$
+- $I = 15$ mA, $R = 1{,}2$ kΩ → $V$ y $P$
+- $V = 5$ V, $I = 250$ mA → $R$ y $P$
+
+---
+
+*El simulador interactivo de esta ley —tres campos, se completan dos y calcula el
+tercero mostrando la fórmula despejada— se incorpora en la Fase 1.*
