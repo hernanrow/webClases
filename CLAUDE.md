@@ -283,7 +283,14 @@ volver a pisar:
   Plex Mono. Arreglarlo requiere generar un subset propio a partir del IBM Plex
   completo; queda pendiente y no bloquea nada.
 
-**Fase 2 — Unidad 2.** Circuito base compartido y los cinco métodos sobre él.
+**Fase 2 — Unidad 2. HECHA.** Circuito base compartido (`src/lib/circuito-base.ts`) y
+los cinco métodos sobre él, con sus cinco apuntes.
+
+Que los cinco den el mismo resultado no queda como intención: `circuito-base.test.ts`
+compara los métodos entre sí sobre cinco circuitos distintos —incluidos uno con fuente
+negativa y uno con una fuente en cero— y el build falla si alguno se desvía. Los cinco
+componentes comparten el esquema (`CircuitoBaseSvg`) y la tabla de corrientes de rama
+(`comun.tsx`), que es lo que hace evidente en pantalla que resuelven lo mismo.
 
 **Fase 3 — Unidades 3 y 4.** `complejos.ts`, componentes de CA con animación.
 
