@@ -1,0 +1,118 @@
+---
+titulo: "Suma de senoidales"
+unidad: 3
+orden: 2
+resumen: "Por qué 3 V más 4 V pueden dar 5 V, y cómo se suma con vectores."
+duracion: "1 clase"
+requisitos: ["11-senoide-y-fasor"]
+pdf: true
+---
+
+import Simulador from '../../components/Simulador.astro';
+import SumaFasorial from '../../components/sim/SumaFasorial.tsx';
+
+## El resultado que no cierra
+
+Dos senoides de la misma frecuencia, una de 3 V de pico y otra de 4 V de pico. Se suman.
+¿Cuánto da?
+
+Si están **en fase**, 7 V. Eso es lo que uno espera.
+
+Si están desfasadas **90°**, da **5 V**. No 7, no 3,5: cinco.
+
+Y no es un truco ni un caso raro. Es lo que pasa en cualquier circuito de CA donde hay
+una resistencia y una bobina, y es la razón por la que la unidad que viene existe.
+
+## Por qué pasa
+
+Porque las dos senoides **no llegan al máximo en el mismo instante**. Cuando una está en
+su pico, la otra está en cero. La suma en cada momento es la suma de dos números que
+nunca son los dos grandes a la vez, así que el máximo de la suma es menor que la suma de
+los máximos.
+
+Sumar punto a punto para averiguarlo sería un trabajo enorme. Con fasores es un
+triángulo.
+
+## La regla del paralelogramo
+
+Como cada senoide es un vector, la suma de senoides es la **suma vectorial** de sus
+fasores: se dibuja uno, desde su punta el otro, y la suma va del origen al final.
+
+Para el caso de 3 y 4 a 90°, el triángulo es rectángulo:
+
+$$
+V = \sqrt{3^2 + 4^2} = 5\ \text{V}
+$$
+
+$$
+\varphi = \arctan\frac{4}{3} = 53{,}1°
+$$
+
+Es el triángulo 3-4-5 de siempre. Que aparezca acá no es casualidad: **las magnitudes
+desfasadas 90° se combinan con Pitágoras**, y eso va a volver a pasar con las
+impedancias, con las tensiones y con las potencias.
+
+## En el caso general
+
+Si el desfasaje no es 90°, el triángulo no es rectángulo y hay que usar el teorema del
+coseno, o —más práctico— descomponer cada fasor en sus componentes y sumarlas por
+separado:
+
+$$
+V_x = V_1\cos\varphi_1 + V_2\cos\varphi_2 \qquad
+V_y = V_1\operatorname{sen}\varphi_1 + V_2\operatorname{sen}\varphi_2
+$$
+
+$$
+V = \sqrt{V_x^2 + V_y^2} \qquad \varphi = \arctan\frac{V_y}{V_x}
+$$
+
+Eso es exactamente pasar a **forma binómica**, sumar, y volver a **polar**. Y es lo que
+vas a hacer con números complejos en la unidad que viene: el número complejo no es una
+herramienta nueva, es la notación cómoda para esta misma cuenta.
+
+## Probalo
+
+A la izquierda los tres fasores girando juntos, con el paralelogramo dibujado. A la
+derecha las tres curvas en el tiempo.
+
+<Simulador nombre="Suma de senoidales" ruta="/circuitos-redes-i/12-suma-de-senoidales/" captura="/capturas/12-suma-de-senoidales.png">
+  <SumaFasorial client:visible />
+</Simulador>
+
+Tres cosas para probar:
+
+1. **Poné las dos fases iguales.** Ahí sí las amplitudes se suman a lo bruto.
+2. **Poné 180° de diferencia y amplitudes iguales.** La suma se anula: los dos fasores
+   quedan opuestos y se cancelan. En el tiempo se ve que una es el espejo de la otra.
+3. **Dejá 90° y movele las amplitudes.** Verificá que siempre da la hipotenusa.
+
+## La condición que no se puede saltear
+
+Todo esto vale **solo si las dos senoides tienen la misma frecuencia**.
+
+Si no la tienen, los fasores giran a velocidades distintas, el ángulo entre ellos cambia
+todo el tiempo, y la suma **no es una senoide**: es una forma de onda que se repite con
+otro período. El simulador ni siquiera te deja intentarlo.
+
+Esa restricción no es un problema en la práctica: en un circuito con una sola fuente,
+todo tiene la frecuencia de la fuente. Cuando hay varias frecuencias —una señal de audio,
+por ejemplo— se analiza cada una por separado y se suman los resultados, que es
+superposición otra vez.
+
+## Errores frecuentes
+
+1. **Sumar las amplitudes.** Solo vale si están en fase.
+2. **Sumar los ángulos.** El ángulo de la suma no es la suma de los ángulos; sale de la
+   arcotangente de las componentes.
+3. **Olvidar el cuadrante.** Si $V_x$ es negativo, la arcotangente sola te da el ángulo
+   equivocado. Mirá el dibujo.
+4. **Sumar senoides de frecuencias distintas con fasores.** No se puede.
+
+## Para practicar
+
+1. Sumá 10 V ∠ 0° con 10 V ∠ 60°. ¿Cuánto da el módulo? ¿Y el ángulo?
+2. ¿Qué fase tiene que tener una senoide de 5 V para que sumada a otra de 5 V ∠ 0° dé
+   5 V?
+3. Dos de 8 V. ¿Cuál es el desfasaje que hace que la suma valga exactamente 8 V?
+4. Si la suma de dos senoides da cero, ¿qué se puede afirmar de ellas?

@@ -1,0 +1,146 @@
+---
+titulo: "Impedancia"
+unidad: 4
+orden: 1
+resumen: "La resistencia generalizada: qué le opone un circuito a la corriente alterna."
+duracion: "3 clases"
+requisitos: ["12-suma-de-senoidales"]
+pdf: true
+---
+
+import Simulador from '../../components/Simulador.astro';
+import Impedancia from '../../components/sim/Impedancia.tsx';
+
+## Bobinas y capacitores en alterna
+
+En continua una bobina es un cable y un capacitor un circuito abierto. En alterna los dos
+se oponen al paso de la corriente, pero de un modo distinto al de una resistencia: **no
+disipan energía, la almacenan y la devuelven.**
+
+Esa oposición se llama **reactancia**, se mide en ohm y depende de la frecuencia.
+
+**Reactancia inductiva:**
+
+$$
+X_L = \omega L = 2\pi f L
+$$
+
+Crece con la frecuencia. La bobina se opone a los cambios de corriente, así que cuanto
+más rápido cambia, más se opone. En continua ($f = 0$) vale cero: es un cable.
+
+**Reactancia capacitiva:**
+
+$$
+X_C = \frac{1}{\omega C} = \frac{1}{2\pi f C}
+$$
+
+Baja con la frecuencia. En continua es infinita: circuito abierto. Es justo lo contrario
+de la bobina, y ese contraste es lo que hace posible la resonancia.
+
+## Los desfasajes
+
+Esta es la parte que hay que tener en la punta de la lengua:
+
+| Componente | Relación entre V e I |
+|---|---|
+| Resistencia | **en fase** |
+| Bobina | la tensión **adelanta** 90° a la corriente |
+| Capacitor | la corriente **adelanta** 90° a la tensión |
+
+Hay una regla mnemotécnica que se usa en todos lados: **ELI the ICE man**. En la bobina
+(L), E va antes que I. En el capacitor (C), I va antes que E.
+
+## La impedancia
+
+Como la resistencia y las reactancias están desfasadas 90° entre sí, **no se suman a lo
+bruto**: se suman como vectores, igual que las senoides del apunte anterior.
+
+Ahí es donde entran los números complejos, que no son más que la notación cómoda para
+esa suma:
+
+$$
+Z = R + j(X_L - X_C)
+$$
+
+La parte real es la resistiva y la imaginaria la reactiva. La j delante marca los 90°.
+
+En **forma polar**, que es la que sirve para dividir:
+
+$$
+|Z| = \sqrt{R^2 + (X_L - X_C)^2} \qquad
+\varphi = \arctan\frac{X_L - X_C}{R}
+$$
+
+Y la ley de Ohm sigue valiendo, ahora con complejos:
+
+$$
+\bar{V} = \bar{I} \cdot \bar{Z}
+$$
+
+Todo lo que aprendiste en las unidades 1 y 2 —serie, paralelo, mallas, nudos, Thévenin—
+**sigue funcionando igual**, cambiando resistencias por impedancias y números reales por
+complejos. No hay teoría nueva: hay aritmética nueva.
+
+## El triángulo de impedancias
+
+Si dibujás R en el eje horizontal y X en el vertical, Z es la hipotenusa. Ese dibujo
+resume todo:
+
+- El **módulo** sale de Pitágoras.
+- El **ángulo** sale de la tangente.
+- Si X es positiva el triángulo apunta para arriba: **inductivo**.
+- Si es negativa apunta para abajo: **capacitivo**.
+- Si X es cero el triángulo se aplasta: **resistivo puro**.
+
+## Probalo
+
+Cambiá entre serie y paralelo, movele los valores y mirá el triángulo y el diagrama
+fasorial.
+
+<Simulador nombre="Impedancia" ruta="/circuitos-redes-i/13-impedancia/" captura="/capturas/13-impedancia.png">
+  <Impedancia client:visible />
+</Simulador>
+
+Probá esto: dejá R y L fijos y subí la frecuencia. Mirá cómo el triángulo se va parando y
+el circuito se vuelve cada vez más inductivo. Ahora poné L en cero y metele C: pasa lo
+contrario.
+
+## En serie y en paralelo
+
+**En serie** las impedancias se suman, igual que las resistencias:
+
+$$
+Z = Z_1 + Z_2 + \dots
+$$
+
+**En paralelo** se suman las admitancias, que son las inversas:
+
+$$
+\frac{1}{Z} = \frac{1}{Z_1} + \frac{1}{Z_2} + \dots
+$$
+
+La cuenta es la misma de la unidad 1; lo que cambia es que ahora hay que dividir números
+complejos, que se hace multiplicando arriba y abajo por el conjugado del denominador.
+
+> **Ojo con el paralelo.** En continua, el paralelo de dos resistencias siempre da menos
+> que la menor. Con impedancias eso **deja de ser cierto**: una bobina y un capacitor en
+> paralelo pueden dar una impedancia enorme, mayor que las dos. Es el circuito tanque, y
+> lo vemos en el apunte de resonancia.
+
+## Errores frecuentes
+
+1. **Sumar R y X directamente.** 30 Ω de resistencia con 40 Ω de reactancia dan 50 Ω de
+   impedancia, no 70.
+2. **Olvidar el signo de $X_C$.** La reactancia capacitiva entra restando.
+3. **Usar valores de pico donde van eficaces**, o mezclarlos.
+4. **Aplicar la fórmula de serie en un circuito paralelo.** El triángulo de impedancias
+   sirve para el serie; en paralelo hay que trabajar con admitancias.
+
+## Para practicar
+
+1. R = 30 Ω y L = 100 mH a 50 Hz. Calculá $X_L$, $|Z|$ y φ a mano, y verificá.
+2. ¿Qué capacidad hay que poner en serie con esa bobina para que el circuito quede
+   resistivo puro a 50 Hz?
+3. Un R-C serie con R = 100 Ω y C = 10 µF. ¿A qué frecuencia el desfasaje es de −45°?
+   ¿Qué tiene de particular esa frecuencia?
+4. Con 220 V aplicados al circuito del punto 1, ¿cuánta corriente circula?

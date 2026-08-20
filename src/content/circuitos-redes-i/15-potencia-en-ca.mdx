@@ -1,0 +1,150 @@
+---
+titulo: "Potencia en corriente alterna"
+unidad: 4
+orden: 3
+resumen: "Activa, reactiva y aparente: por qué la factura de luz cobra algo que no consumís."
+duracion: "2 clases"
+requisitos: ["13-impedancia"]
+pdf: true
+---
+
+import Simulador from '../../components/Simulador.astro';
+import TrianguloPotencias from '../../components/sim/TrianguloPotencias.tsx';
+
+## Tres potencias
+
+En continua hay una sola potencia: $P = V I$. En alterna hay tres, y la diferencia entre
+ellas es plata.
+
+**Potencia activa, P, en watt.** La que se convierte en trabajo o en calor. La que
+realmente consumís y la que hace girar el motor.
+
+$$
+P = V I \cos\varphi
+$$
+
+**Potencia reactiva, Q, en var.** La que va y viene entre la fuente y el circuito sin
+convertirse en nada. Las bobinas y los capacitores la piden en un cuarto de ciclo y la
+devuelven en el siguiente.
+
+$$
+Q = V I \operatorname{sen}\varphi
+$$
+
+**Potencia aparente, S, en VA.** El producto de tensión por corriente a secas. Es lo que
+tiene que poder entregar la instalación.
+
+$$
+S = V I
+$$
+
+## El triángulo
+
+Como P y Q están desfasadas 90°, se combinan con Pitágoras. Otra vez el mismo triángulo:
+
+$$
+S = \sqrt{P^2 + Q^2}
+$$
+
+$$
+\cos\varphi = \frac{P}{S}
+$$
+
+El **factor de potencia**, $\cos\varphi$, es qué fracción de lo que movés efectivamente
+usás. Va de 0 a 1, y cuanto más cerca de 1, mejor.
+
+Es el mismo φ que el de la impedancia, y el triángulo de potencias es el de impedancias
+multiplicado por $I^2$. Por eso son semejantes: mismo ángulo, distinta escala.
+
+## Por qué te lo cobran
+
+La distribuidora tiene que dimensionar cables, transformadores y protecciones para la
+corriente que realmente circula, que es $I = S/V$. Esa corriente calienta los cables aunque
+la energía vuelva.
+
+Si tu factor de potencia es 0,6, para entregarte 6 kW de potencia útil tienen que mover
+10 kVA. Cables más gruesos, transformador más grande, más pérdidas en la línea — todo para
+una energía que después te devuelve.
+
+Por eso a las instalaciones industriales **se les cobra penalidad** si el cos φ baja de un
+mínimo, que en Argentina suele ser 0,95.
+
+## Cómo se corrige
+
+La reactiva de las bobinas es positiva y la de los capacitores negativa. Entonces:
+**capacitores en paralelo con la carga**, dimensionados para cancelar buena parte de la
+reactiva inductiva.
+
+$$
+Q_C = P(\tan\varphi_1 - \tan\varphi_2)
+$$
+
+$$
+C = \frac{Q_C}{\omega V^2}
+$$
+
+donde $\varphi_1$ es el ángulo que tenés y $\varphi_2$ el que querés.
+
+Fijate que **P no cambia**: seguís haciendo el mismo trabajo. Lo que baja es Q, y con eso
+bajan S y la corriente. Menos corriente por los mismos cables.
+
+> **Van en paralelo, no en serie.** En paralelo no alteran la tensión sobre la carga: el
+> motor sigue recibiendo sus 380 V y trabajando igual. En serie cambiarían la tensión que
+> le llega y arruinarían el funcionamiento.
+
+## Probalo
+
+Cargá un circuito inductivo, mirá el triángulo, y después movele el cos φ objetivo para
+ver qué capacitor haría falta.
+
+<Simulador nombre="Triángulo de potencias" ruta="/circuitos-redes-i/15-potencia-en-ca/" captura="/capturas/15-potencia-en-ca.png">
+  <TrianguloPotencias client:visible />
+</Simulador>
+
+Los valores que vienen cargados son los de un motor chico: 220 V, 30 Ω de resistencia y
+127 mH, que a 50 Hz dan cos φ ≈ 0,6. Es un caso realista de instalación sin corregir.
+
+## Un caso resuelto
+
+220 V sobre una impedancia de $30 + j40$ Ω.
+
+$$
+|Z| = \sqrt{30^2 + 40^2} = 50\ \Omega \qquad I = \frac{220}{50} = 4{,}4\ \text{A}
+$$
+
+$$
+S = 220 \cdot 4{,}4 = 968\ \text{VA}
+$$
+
+$$
+\cos\varphi = \frac{30}{50} = 0{,}6 \quad\Rightarrow\quad P = 968 \cdot 0{,}6 = 580{,}8\ \text{W}
+$$
+
+$$
+Q = 968 \cdot 0{,}8 = 774{,}4\ \text{var}
+$$
+
+Control: $\sqrt{580{,}8^2 + 774{,}4^2} = 968$ VA. ✓
+
+Fijate que el cos φ se puede sacar del triángulo de impedancias, sin calcular ninguna
+potencia: es $R/|Z|$. Ese atajo ahorra tiempo en la evaluación.
+
+## Errores frecuentes
+
+1. **Sumar P y Q directamente.** Van con Pitágoras.
+2. **Creer que corregir el cos φ ahorra energía.** No baja P, o sea que no baja el consumo
+   de kWh. Lo que evita es la penalidad y la corriente de más.
+3. **Poner los capacitores en serie.**
+4. **Mezclar las unidades.** W para activa, var para reactiva, VA para aparente. No son
+   intercambiables aunque dimensionalmente sean lo mismo.
+5. **Usar valores de pico.** Todas estas fórmulas van con eficaces.
+
+## Para practicar
+
+1. Un motor de 3 kW con cos φ = 0,7 a 380 V. ¿Cuánta corriente toma? ¿Y si se corrige a
+   0,95?
+2. Para el circuito del ejemplo, ¿qué capacitor lleva el cos φ de 0,6 a 0,95?
+3. Una instalación tiene 10 kW de activa y 7 kvar de reactiva. ¿Cuál es la aparente y el
+   factor de potencia?
+4. ¿Puede el cos φ ser negativo? ¿Qué significaría?
+5. Si duplicás la resistencia dejando la reactancia igual, ¿qué le pasa al cos φ?

@@ -1173,3 +1173,193 @@ main {
 .esquema__svg .fuente-corriente__punta {
   fill: var(--tinta);
 }
+
+/* --- Fasores y senoides --- */
+
+.fasor-y-curva {
+  display: grid;
+  grid-template-columns: minmax(0, 156fr) minmax(0, 240fr);
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+/* A 360 px los dos dibujos juntos quedan ilegibles: se apilan. */
+@media (max-width: 30rem) {
+  .fasor-y-curva {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.25rem;
+  }
+}
+
+.fasor-svg,
+.curva-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.fasor__circulo {
+  fill: none;
+  stroke: var(--filete);
+  stroke-width: 1;
+}
+
+.fasor__eje {
+  stroke: var(--filete-fuerte);
+  stroke-width: 1;
+}
+
+.fasor__vector {
+  stroke: var(--tinta);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+.fasor__punta {
+  fill: var(--verde-senal);
+}
+
+/* La línea que une el fasor con la curva: es lo que hace ver que son lo mismo. */
+.fasor__proyeccion {
+  stroke: var(--verde-senal);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+}
+
+.fasor__proyeccion-marca {
+  stroke: var(--verde-senal);
+  stroke-width: 2;
+}
+
+.fasor__rotulo {
+  font-family: var(--mono);
+  font-size: 9px;
+  fill: var(--tinta-3);
+}
+
+/* Un segundo fasor, para la suma fasorial. */
+.fasor__vector--b {
+  stroke: var(--u3);
+}
+
+.fasor__vector--suma {
+  stroke: var(--verde-senal);
+  stroke-width: 3;
+}
+
+.curva__trazo--b {
+  stroke: var(--u3);
+  stroke-dasharray: 4 3;
+}
+
+.curva__trazo--suma {
+  stroke: var(--verde-senal);
+  stroke-width: 2.5;
+}
+
+.curva__trazo--tenue {
+  stroke: var(--filete-fuerte);
+  stroke-width: 1.5;
+}
+
+/* --- Deslizador con su valor --- */
+
+.campo--deslizador {
+  flex: 1 1 11rem;
+  min-width: 9rem;
+}
+
+.campo--deslizador .campo__rotulo {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+
+.campo__valor {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.85rem;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--tinta);
+}
+
+/* --- Leyenda de colores --- */
+
+.leyenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.1rem;
+  margin: 0.6rem 0 1rem;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--tinta-2);
+}
+
+.leyenda span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.leyenda i {
+  width: 1.1rem;
+  height: 0;
+  border-top: 2.5px solid currentColor;
+}
+
+/* --- Triángulos de impedancias y potencias --- */
+
+.triangulo__cateto {
+  stroke: var(--tinta-2);
+  stroke-width: 2;
+}
+
+.triangulo__hipotenusa {
+  stroke: var(--verde-senal);
+  stroke-width: 3;
+}
+
+.fasor__arco {
+  fill: none;
+  stroke: var(--verde-senal);
+  stroke-width: 1.5;
+}
+
+.curva--ancha {
+  max-width: 30rem;
+}
+
+/* Banda de paso en la curva de resonancia. */
+.banda {
+  fill: var(--verde-senal);
+  opacity: 0.08;
+}
+
+/* --- Cartel de carácter del circuito --- */
+
+.cartel {
+  border-left: 3px solid var(--filete-fuerte);
+  padding: 0.5rem 0 0.5rem 0.9rem;
+  margin: 1.3rem 0;
+  font-size: 0.9rem;
+  color: var(--tinta-2);
+}
+
+.cartel strong {
+  color: var(--tinta);
+}
+
+.cartel--inductivo {
+  border-left-color: var(--u2);
+}
+
+.cartel--capacitivo {
+  border-left-color: var(--u4);
+}
+
+.cartel--resistivo {
+  border-left-color: var(--verde-senal);
+}

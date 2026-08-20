@@ -1,0 +1,126 @@
+---
+titulo: "Senoide y fasor"
+unidad: 3
+orden: 1
+resumen: "Qué es una senoide, cómo se la describe y por qué conviene dibujarla como un vector que gira."
+duracion: "2 clases"
+requisitos: ["01-ley-de-ohm"]
+pdf: true
+---
+
+import Simulador from '../../components/Simulador.astro';
+import SenoidalFasor from '../../components/sim/SenoidalFasor.tsx';
+
+## Por qué alterna y no continua
+
+La red domiciliaria es alterna por una razón práctica: **la tensión alterna se puede
+subir y bajar con un transformador, y la continua no.** Eso permite transportar energía
+a 132 kV, donde las pérdidas en el cable son chicas, y bajarla a 220 V en la esquina de
+tu casa.
+
+Y es senoidal, y no cuadrada o triangular, porque así sale de un generador: una espira
+girando dentro de un campo magnético produce una tensión proporcional al seno del
+ángulo. La forma no se eligió; es la que da la física del generador.
+
+## Cómo se describe
+
+$$
+v(t) = V_p \cdot \operatorname{sen}(\omega t + \varphi)
+$$
+
+Tres números y ya está descripta del todo:
+
+- **$V_p$, la amplitud o valor de pico.** Lo más alto que llega.
+- **$\omega$, la pulsación**, en radianes por segundo. Qué tan rápido va.
+- **$\varphi$, la fase inicial**, en grados o radianes. Dónde estaba en $t = 0$.
+
+## Los valores que hay que saber distinguir
+
+| Valor | Cómo se calcula | Para qué sirve |
+|---|---|---|
+| Pico, $V_p$ | el máximo | dimensionar aislaciones |
+| Pico a pico, $V_{pp}$ | $2 V_p$ | lo que se mide en el osciloscopio |
+| Eficaz, $V_{ef}$ | $V_p/\sqrt{2}$ | **el que se usa para todo lo demás** |
+
+El **valor eficaz** es el más importante y el peor entendido. Es la tensión continua que
+produciría el mismo calentamiento en una resistencia. Cuando decimos que la red es de
+220 V, hablamos de eficaces: el pico real es de 311 V.
+
+$$
+V_{ef} = \frac{V_p}{\sqrt{2}} \approx 0{,}707 \cdot V_p
+$$
+
+> **Es el valor que marca el téster.** Un multímetro en alterna te muestra eficaces. Si
+> medís la red y te da 220, el pico que está soportando la aislación es 311 V. Por eso un
+> capacitor para 250 V no sirve para la línea, aunque 250 sea mayor que 220.
+
+## Período, frecuencia y pulsación
+
+$$
+T = \frac{1}{f} \qquad \omega = 2\pi f
+$$
+
+La red argentina es de 50 Hz: un ciclo cada 20 ms. La pulsación es
+$\omega = 2\pi \cdot 50 \approx 314$ rad/s.
+
+Las tres dicen lo mismo. Se usan las tres porque en cada cuenta cae más cómoda una:
+$T$ para leer un osciloscopio, $f$ para hablar, $\omega$ para las fórmulas.
+
+## El fasor
+
+Acá viene la idea que ordena toda la unidad.
+
+Una senoide es la **proyección sobre el eje vertical de un vector que gira**. Si tenés un
+vector de longitud $V_p$ girando a velocidad $\omega$, y mirás solo su altura, lo que ves
+es exactamente $V_p \operatorname{sen}(\omega t)$.
+
+Ese vector girando es el **fasor**.
+
+La ventaja: si todas las senoides de un circuito tienen la misma frecuencia —y en un
+circuito con una sola fuente la tienen—, todos los fasores giran juntos. Entonces podés
+**dejar de girar** y quedarte con la foto: cada senoide queda representada por un vector
+quieto, con su módulo y su ángulo.
+
+Y ahí el problema cambia de naturaleza: en vez de sumar funciones del tiempo, sumás
+vectores. Eso es lo que hace que la CA sea tratable.
+
+## Miralo
+
+A la izquierda el fasor girando, a la derecha la senoide trazándose. La línea punteada
+une la punta del fasor con el punto de la curva: **no son dos dibujos que van juntos, es
+la misma cosa vista de dos maneras.**
+
+<Simulador nombre="Senoide y fasor" ruta="/circuitos-redes-i/11-senoide-y-fasor/" captura="/capturas/11-senoide-y-fasor.png">
+  <SenoidalFasor client:visible />
+</Simulador>
+
+Movele la amplitud y mirá que el círculo crece. Movele la fase y mirá que la curva se
+corre de lugar sin cambiar de forma. Movele la frecuencia y mirá que cambian T y ω pero
+el dibujo del fasor queda igual: **la frecuencia no está en el fasor**, es un dato aparte
+que se sobreentiende.
+
+## Una convención que confunde
+
+El fasor se puede escribir con el **pico** o con el **eficaz** como módulo. Las dos se
+usan.
+
+En esta materia usamos el **eficaz**, que es lo habitual en electrotecnia: hace que las
+potencias salgan directas, sin factores de $\sqrt{2}$ dando vueltas. Cuando leas un libro,
+fijate cuál convención usa antes de comparar números.
+
+## Errores frecuentes
+
+1. **Confundir pico con eficaz.** El más común y el más caro: se queman componentes así.
+2. **Creer que el fasor gira en los diagramas.** En un diagrama fasorial está quieto. La
+   rotación se sobreentiende y se cancela porque todos giran igual.
+3. **Sumar fasores de frecuencias distintas.** No se puede: no giran juntos, y la suma no
+   es una senoide.
+4. **Mezclar grados y radianes.** ω está en rad/s, φ suele escribirse en grados.
+
+## Para practicar
+
+1. Una senoide de 100 V de pico a 60 Hz. ¿Cuánto valen $V_{ef}$, $V_{pp}$, $T$ y $\omega$?
+2. Un téster marca 12 V en un transformador. ¿Cuál es la tensión de pico?
+3. ¿Cuánto vale $v(t)$ a los 5 ms si $v(t) = 311\operatorname{sen}(314t)$?
+4. Dos senoides de la misma amplitud pero una desfasada 180°. ¿Cómo se ven los dos
+   fasores? Probalo en el simulador del apunte que sigue.

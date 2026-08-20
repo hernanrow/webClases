@@ -1,0 +1,130 @@
+---
+titulo: "Resonancia RLC"
+unidad: 4
+orden: 2
+resumen: "La frecuencia a la que las reactancias se cancelan, y por qué eso permite sintonizar una radio."
+duracion: "2 clases"
+requisitos: ["13-impedancia"]
+pdf: true
+---
+
+import Simulador from '../../components/Simulador.astro';
+import Resonancia from '../../components/sim/Resonancia.tsx';
+
+## La idea
+
+$X_L$ crece con la frecuencia y $X_C$ baja. Dos curvas que van en sentidos opuestos se
+cruzan en algún punto, y en ese punto valen lo mismo.
+
+Ahí, en la impedancia $Z = R + j(X_L - X_C)$, el paréntesis se hace **cero**. La
+impedancia queda:
+
+$$
+Z = R
+$$
+
+Puramente resistiva, mínima, y con la corriente en fase con la tensión. Esa frecuencia es
+la **frecuencia de resonancia**.
+
+## Dónde está
+
+Igualando $X_L = X_C$:
+
+$$
+\omega L = \frac{1}{\omega C} \quad\Rightarrow\quad \omega_0 = \frac{1}{\sqrt{LC}}
+$$
+
+$$
+\boxed{f_0 = \frac{1}{2\pi\sqrt{LC}}}
+$$
+
+Fijate lo que **no** aparece en esa fórmula: **la resistencia**. R cambia qué tan aguda es
+la resonancia, pero no dónde está. Eso se ve muy bien en el simulador: movés R y el pico
+cambia de forma sin correrse.
+
+## Qué pasa alrededor
+
+- **Por debajo de $f_0$**: $X_C$ manda, el circuito es **capacitivo**, la corriente
+  adelanta.
+- **En $f_0$**: se cancelan, el circuito es **resistivo**, la corriente es **máxima**
+  ($I = V/R$).
+- **Por encima de $f_0$**: $X_L$ manda, el circuito es **inductivo**, la tensión adelanta.
+
+En un RLC **serie** la impedancia es mínima en resonancia, así que la corriente es máxima.
+En un RLC **paralelo** —el circuito tanque— pasa lo contrario: la impedancia es máxima y
+la corriente de línea, mínima.
+
+## El factor de calidad Q
+
+Q mide qué tan **selectiva** es la resonancia: qué tan angosto es el pico.
+
+$$
+Q = \frac{1}{R}\sqrt{\frac{L}{C}}
+$$
+
+$$
+BW = \frac{f_0}{Q}
+$$
+
+El **ancho de banda** BW es el rango de frecuencias entre las dos frecuencias de corte,
+donde la potencia cae a la mitad y el módulo de la impedancia es $\sqrt{2}$ veces el de
+resonancia.
+
+- **Q alto** (R chica) → pico agudo, banda angosta, muy selectivo.
+- **Q bajo** (R grande) → pico chato, banda ancha, poco selectivo.
+
+Un detalle que se pregunta: las dos frecuencias de corte **no son simétricas** respecto de
+$f_0$ en escala lineal. La que sí se cumple exacto es que su **media geométrica** da
+$f_0$: $f_0 = \sqrt{f_1 \cdot f_2}$.
+
+## Probalo
+
+Movés L o C y la curva se corre. Movés R y cambia de forma sin correrse.
+
+<Simulador nombre="Resonancia RLC" ruta="/circuitos-redes-i/14-resonancia/" captura="/capturas/14-resonancia.png">
+  <Resonancia client:visible />
+</Simulador>
+
+## Para qué sirve
+
+**Sintonizar una radio.** Es la aplicación clásica y la que explica todo el tema. La
+antena recibe todas las emisoras a la vez. Un circuito resonante con Q alto presenta
+impedancia muy distinta a la frecuencia de una emisora que a la de las demás, y así deja
+pasar una sola. Girar el dial es cambiar C —o L— para mover $f_0$.
+
+Si el Q fuera bajo, escucharías tres emisoras mezcladas. Si fuera altísimo, perderías
+parte de la señal, porque una emisora de FM no ocupa una sola frecuencia sino una banda.
+El diseño consiste en elegir el Q justo.
+
+**Filtros.** Pasabanda, rechazabanda, y todo lo que hay en un ecualizador.
+
+**Y el lado feo:** la resonancia también aparece donde no se la quiere. En una instalación
+industrial con muchos capacitores de corrección y la inductancia de los transformadores,
+puede aparecer una resonancia a un armónico de la red y hacer circular corrientes enormes
+que queman los capacitores. Se llama resonancia paralela y es un problema real.
+
+## Una cosa que sorprende
+
+En resonancia serie, las tensiones sobre L y sobre C pueden ser **mucho mayores que la
+tensión aplicada**. Concretamente, Q veces mayores.
+
+Con Q = 10 y 10 V aplicados, sobre la bobina hay 100 V. No se viola nada: esas dos
+tensiones están en contrafase y se cancelan entre sí, así que la suma sigue dando 10 V.
+Pero son 100 V reales, y el capacitor tiene que aguantarlos.
+
+Es una de las razones por las que un circuito resonante mal dimensionado se destruye solo.
+
+## Errores frecuentes
+
+1. **Creer que R afecta a $f_0$.** No.
+2. **Confundir resonancia serie con paralelo.** En serie Z es mínima; en paralelo, máxima.
+3. **Suponer que las frecuencias de corte son simétricas.** Lo es su media geométrica.
+4. **Olvidar que las tensiones internas pueden superar a la aplicada.**
+
+## Para practicar
+
+1. L = 100 mH y C = 10 µF. Calculá $f_0$ a mano y verificá con el simulador.
+2. Con R = 10 Ω en ese circuito, ¿cuánto valen Q y el ancho de banda?
+3. ¿Qué C hace falta para sintonizar 1000 kHz con una bobina de 100 µH?
+4. Con 10 V aplicados y Q = 15, ¿cuánta tensión hay sobre el capacitor en resonancia?
+5. Verificá en el simulador que $\sqrt{f_1 f_2}$ da $f_0$.
