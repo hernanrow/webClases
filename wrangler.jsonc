@@ -1,0 +1,11 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "webclases",
+  "compatibility_date": "2026-08-20",
+  // Sitio 100% estático: no hay `main`, no corre código en el edge.
+  "assets": {
+    "directory": "./dist",
+    // Sin esto, Workers devuelve un 404 vacío en vez de servir dist/404.html.
+    "not_found_handling": "404-page"
+  }
+}
