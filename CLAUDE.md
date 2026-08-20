@@ -292,7 +292,19 @@ negativa y uno con una fuente en cero— y el build falla si alguno se desvía. 
 componentes comparten el esquema (`CircuitoBaseSvg`) y la tabla de corrientes de rama
 (`comun.tsx`), que es lo que hace evidente en pantalla que resuelven lo mismo.
 
-**Fase 3 — Unidades 3 y 4.** `complejos.ts`, componentes de CA con animación.
+**Fase 3 — Unidades 3 y 4. HECHA.** `complejos.ts`, `ca.ts` y los cinco componentes
+de corriente alterna, con sus cinco apuntes.
+
+La animación vive en `usarAnimacion.ts`, no repartida por los componentes: ahí están las
+tres reglas —pausa automática con `prefers-reduced-motion`, botón de pausa siempre
+disponible, y freno con la pestaña oculta para no gastar batería— más el recorte del
+salto de tiempo al volver de segundo plano.
+
+Nota para verificar animaciones: en un navegador controlado por herramientas,
+`document.hidden` suele dar `true` y `requestAnimationFrame` no dispara. El movimiento no
+se puede comprobar así. Lo que sí se verifica —y es lo que importa— es la
+**correspondencia geométrica**: la altura de la punta del fasor tiene que ser igual a la
+del cursor de la curva, para cualquier fase y amplitud.
 
 **Fase 4 — Ejercitación.** Generadores por tema, buscador del sitio, modo offline
 (service worker) para que el material siga disponible sin señal en el aula.
