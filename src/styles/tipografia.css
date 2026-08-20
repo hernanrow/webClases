@@ -1,15 +1,23 @@
 /* ---------------------------------------------------------------
-   Tipografías autohospedadas. Nada se pide a un dominio de terceros
-   (CLAUDE.md §3: "sin fuentes externas bloqueantes").
+   Tipografias autohospedadas. Nada se pide a un dominio de terceros
+   (CLAUDE.md 3: "sin fuentes externas bloqueantes").
 
    Se declaran a mano en vez de importar el CSS de @fontsource porque:
-   1. @fontsource registra la familia como "Libre Franklin Variable",
+   1. @fontsource registra las familias como "Libre Franklin Variable",
       no con el nombre limpio.
-   2. Su CSS trae cirílico, griego y vietnamita — decenas de archivos
-      que este sitio no usa nunca.
+   2. Su CSS trae cirilico y vietnamita, decenas de archivos que este
+      sitio no usa nunca.
 
-   El subset es latín básico más los signos del castellano y de la
-   notación técnica (Ω, °, µ, ×, comillas latinas).
+   El archivo variable va como `format('woff2')`, no como
+   `format('woff2-variations')`. El segundo es sintaxis heredada y el
+   Chromium que imprime los PDF la rechaza: el cuerpo salia en DejaVu
+   Sans en vez de Libre Franklin. Un woff2 variable es un woff2 valido,
+   asi que el sufijo no aporta nada y si rompe.
+
+   El subset es latin basico mas los signos del castellano y de la
+   notacion tecnica. OJO: no cubre el simbolo del ohm (U+03A9, alfabeto
+   griego). Ningun subset de @fontsource lo trae para estas dos familias,
+   asi que ese caracter cae en la fuente de reserva del sistema.
    --------------------------------------------------------------- */
 
 @font-face {
@@ -18,7 +26,7 @@
   font-display: swap;
   font-weight: 100 900;
   src: url('../../node_modules/@fontsource-variable/libre-franklin/files/libre-franklin-latin-wght-normal.woff2')
-    format('woff2-variations');
+    format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
     U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
     U+2212, U+2215, U+FEFF, U+FFFD;
