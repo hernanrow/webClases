@@ -261,9 +261,27 @@ el flujo nuevo es **Workers con Static Assets**, que da un dominio
 pero la configuración vive en `wrangler.jsonc` y hay diferencias: la página 404 hay que
 declararla con `not_found_handling`, cosa que Pages hacía sola.
 
-**Fase 1 — Unidad 1 completa.** `src/lib/circuitos.ts` (resolución de sistemas lineales
-por Gauss) + `LeyDeOhm`, `CodigoColores`, `RedResistiva`, `EstrellaTriangulo`,
-`VerificadorKirchhoff`. Apuntes de los cinco temas.
+**Fase 1 — Unidad 1 completa. HECHA.** `circuitos.ts` (Gauss con pivoteo parcial),
+`colores.ts`, los cinco simuladores y los cinco apuntes. 79 tests con Vitest.
+
+La versión imprimible **no corre en el build de Cloudflare** sino en un GitHub Action
+aparte (`.github/workflows/pdf.yml`), que se dispara solo cuando cambia el contenido.
+Playwright descarga Chromium (>100 MB): hacerlo en cada push convertiría un deploy de
+5 segundos en varios minutos. El Action commitea los PDF y las capturas, y Cloudflare
+los publica como archivos estáticos. Se respeta la regla de la §8 —el HTML es la fuente
+de verdad— porque el script abre las páginas ya construidas y las imprime.
+
+Dos restricciones tipográficas que se descubrieron generando los PDF y conviene no
+volver a pisar:
+
+- **Las fuentes van en pesos estáticos, no variables.** El motor de PDF de Chromium no
+  embebe fuentes variables: las sustituye por la del sistema, y el cuerpo salía impreso
+  en DejaVu Sans.
+- **El símbolo del ohm (Ω, U+03A9) cae en la fuente de reserva del sistema.** Es un
+  carácter griego y ningún subset de @fontsource lo trae para Libre Franklin ni para
+  IBM Plex Mono. Se ve en pantalla como una Ω de otra tipografía al lado de números en
+  Plex Mono. Arreglarlo requiere generar un subset propio a partir del IBM Plex
+  completo; queda pendiente y no bloquea nada.
 
 **Fase 2 — Unidad 2.** Circuito base compartido y los cinco métodos sobre él.
 
