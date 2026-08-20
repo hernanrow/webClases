@@ -396,3 +396,200 @@ main {
   display: inline-block;
   padding: 0.5rem var(--margen);
 }
+
+/* --- Simuladores --- */
+/* Mismo criterio que el resto: sin cajas pesadas. Lo que se destaca es el
+   resultado, que es a lo que el alumno vino. */
+
+.sim {
+  border-top: 1px solid var(--filete);
+  border-bottom: 1px solid var(--filete);
+  padding-block: 1.25rem 1.4rem;
+  margin-block: 2rem;
+}
+
+.sim__rotulo {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--tinta-3);
+  margin: 0 0 1rem;
+}
+
+.sim__campos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.1rem 1.6rem;
+  margin-bottom: 1.3rem;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 7.5rem;
+  flex: 1 1 7.5rem;
+}
+
+.campo__rotulo {
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--tinta-3);
+}
+
+.campo__fila {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.campo input {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: var(--tinta);
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid var(--tinta);
+  border-radius: 0;
+  padding: 0.1rem 0;
+  width: 100%;
+  min-width: 0;
+  -moz-appearance: textfield;
+}
+
+.campo input::-webkit-outer-spin-button,
+.campo input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.campo input::placeholder {
+  color: var(--filete-fuerte);
+}
+
+.campo select {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--tinta-2);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--filete-fuerte);
+  border-radius: 0;
+  padding: 0.15rem 0.1rem;
+}
+
+/* El campo que el simulador está calculando: no se escribe, se lee. */
+.campo--calculado input {
+  border-bottom-color: var(--verde-senal);
+  color: var(--verde-senal);
+}
+
+.campo--calculado .campo__rotulo {
+  color: var(--verde-senal);
+}
+
+/* El resultado es el número más grande de la pantalla. */
+.sim__resultado {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.3rem 0.8rem;
+}
+
+.sim__resultado em {
+  font-style: normal;
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--tinta-3);
+}
+
+.sim__valor {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(1.9rem, 8vw, 2.4rem);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+  color: var(--verde-senal);
+}
+
+.sim__secundario {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.95rem;
+  color: var(--tinta-2);
+}
+
+/* La fórmula despejada, dibujada con CSS. No se carga KaTeX en el navegador:
+   pesa 280 kB y acá alcanza con dos spans. */
+.formula {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.95rem;
+  color: var(--tinta-2);
+  margin-top: 1.1rem;
+}
+
+.frac {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  vertical-align: middle;
+  line-height: 1.15;
+}
+
+.frac > span:first-child {
+  border-bottom: 1px solid currentColor;
+  padding: 0 0.3rem 0.05rem;
+}
+
+.frac > span:last-child {
+  padding: 0.05rem 0.3rem 0;
+}
+
+.sim__aviso {
+  font-size: 0.85rem;
+  color: var(--tinta-2);
+  margin: 1.1rem 0 0;
+}
+
+.sim__error {
+  font-size: 0.85rem;
+  color: var(--u2);
+  margin: 1.1rem 0 0;
+}
+
+.sim__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1.2rem;
+}
+
+.boton {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--tinta);
+  background: transparent;
+  border: 1px solid var(--filete-fuerte);
+  border-radius: 2px;
+  padding: 0.45rem 0.85rem;
+  cursor: pointer;
+}
+
+.boton:hover {
+  border-color: var(--tinta);
+}

@@ -8,6 +8,8 @@ requisitos: []
 pdf: true
 ---
 
+import LeyDeOhm from '../../components/sim/LeyDeOhm.tsx';
+
 ## De qué se trata
 
 Si conectás una resistencia a una fuente y vas subiendo la tensión, la corriente sube
@@ -44,6 +46,11 @@ $$
 Fijate que el resultado se expresa en mA y no en 0,0409 A. La **notación ingenieril**
 —exponentes múltiplos de 3, con el prefijo del SI— es la que se usa en la práctica y
 la que vamos a pedir en las evaluaciones.
+
+Probalo vos: cambiá los valores y mirá cómo se mueve el tercero. Si escribís en el
+campo que está calculado, pasa a ser dato y se despeja otro.
+
+<LeyDeOhm client:visible />
 
 ## Potencia
 
@@ -97,8 +104,3 @@ Calculá lo que falta en cada caso:
 - $V = 12$ V, $R = 470$ Ω → $I$ y $P$
 - $I = 15$ mA, $R = 1{,}2$ kΩ → $V$ y $P$
 - $V = 5$ V, $I = 250$ mA → $R$ y $P$
-
----
-
-*El simulador interactivo de esta ley —tres campos, se completan dos y calcula el
-tercero mostrando la fórmula despejada— se incorpora en la Fase 1.*
