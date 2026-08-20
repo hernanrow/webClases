@@ -25,12 +25,10 @@ const { titulo, descripcion, colorUnidad, materia, curso, hrefMateria } = Astro.
     <title>{titulo}</title>
     <meta name="description" content={descripcion} />
     <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
-    <meta name="theme-color" content="#1c1f24" media="(prefers-color-scheme: dark)" />
-    <meta name="theme-color" content="#f2f3f5" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#fbfcfd" />
   </head>
   <body style={colorUnidad ? `--color-unidad: ${colorUnidad}` : undefined}>
     <a class="saltar" href="#contenido">Saltar al contenido</a>
-    {colorUnidad && <div class="banda-unidad" aria-hidden="true"></div>}
     <Encabezado materia={materia} curso={curso} hrefMateria={hrefMateria} />
     <slot name="migas" />
     <main id="contenido">

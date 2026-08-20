@@ -1,44 +1,32 @@
 /* ---------------------------------------------------------------
-   Tablero de laboratorio. Sin sombras, sin gradientes, sin
-   esquinas redondeadas: es un plano, no una tarjeta. (CLAUDE.md §9)
+   Dirección visual: "pizarra clara" (ver CLAUDE.md §9).
+   Aire, tipografía grande y filetes de un pixel. Ninguna caja.
+   El resultado de un cálculo es el número más grande de la pantalla,
+   porque es a lo que el alumno vino.
    --------------------------------------------------------------- */
 
 :root {
-  /* Claro por defecto */
-  --papel: #f2f3f5;
-  --panel: #e6e8ea;
-  --tinta: #22262c;
-  --tinta-tenue: #5a616b;
-  --borde: #22262c;
-  --borde-tenue: #b9bdc3;
-  --verde-senal: #2c7a4d; /* solo resultados correctos — 4,74:1 sobre --papel */
+  --papel: #fbfcfd;
+  --tinta: #131820;
+  --tinta-2: #626d7a; /* texto de apoyo — 5,6:1 sobre --papel */
+  --tinta-3: #656f7c; /* rótulos y metadatos — 4,96:1 sobre --papel */
+  --filete: #e6eaee;
+  --filete-fuerte: #c9d1d9;
+  --verde-senal: #1d6b45; /* solo resultados correctos — 6,4:1 */
 
+  /* Color de unidad = banda del código de colores de resistencias. */
   --u1: #7b4b2a;
   --u2: #b4342b;
   --u3: #d4762a;
   --u4: #d9a428;
 
-  --sans: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+  --sans: 'Libre Franklin', system-ui, -apple-system, sans-serif;
   --mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
-  --titulo: 'Archivo', var(--sans);
 
-  --trazo: 2px;
-  --banda: 14px; /* ancho de una banda de resistencia */
-  --ancho: 44rem;
+  --ancho: 42rem;
+  --margen: 1.375rem;
 
-  color-scheme: light dark;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --papel: #1c1f24;
-    --panel: #24282f;
-    --tinta: #e8e9eb;
-    --tinta-tenue: #a0a6ae;
-    --borde: #e8e9eb;
-    --borde-tenue: #3c424b;
-    --verde-senal: #3fa66b;
-  }
+  color-scheme: light;
 }
 
 *,
@@ -57,16 +45,16 @@ body {
   color: var(--tinta);
   font-family: var(--sans);
   font-size: 1rem;
-  line-height: 1.6;
+  line-height: 1.65;
   overflow-wrap: break-word;
 }
 
-/* Todo valor numérico, unidad y resultado en mono. Sin excepción. */
+/* Todo valor numérico, unidad y resultado en monoespaciada. Sin excepción:
+   un número tiene que leerse siempre como número. */
 code,
 kbd,
 samp,
-.num,
-.dato dd {
+.num {
   font-family: var(--mono);
   font-variant-numeric: tabular-nums;
 }
@@ -74,33 +62,39 @@ samp,
 h1,
 h2,
 h3 {
-  font-family: var(--titulo);
-  font-weight: 800;
+  font-family: var(--sans);
+  font-weight: 600;
   line-height: 1.15;
-  letter-spacing: -0.01em;
-  margin: 2rem 0 0.75rem;
+  text-wrap: balance;
+  margin: 2.25rem 0 0.6rem;
 }
 
 h1 {
-  font-size: clamp(1.5rem, 6vw, 2.25rem);
+  font-size: clamp(1.7rem, 6.5vw, 2.3rem);
+  letter-spacing: -0.03em;
   margin-top: 0;
 }
+
 h2 {
-  font-size: clamp(1.2rem, 4.5vw, 1.5rem);
+  font-size: clamp(1.15rem, 4.2vw, 1.35rem);
+  letter-spacing: -0.02em;
 }
+
 h3 {
-  font-size: 1.1rem;
+  font-size: 1.02rem;
+  letter-spacing: -0.015em;
 }
 
 a {
   color: inherit;
   text-decoration-thickness: from-font;
-  text-underline-offset: 0.2em;
+  text-underline-offset: 0.18em;
 }
 
 :focus-visible {
-  outline: var(--trazo) solid var(--verde-senal);
-  outline-offset: 2px;
+  outline: 2px solid var(--verde-senal);
+  outline-offset: 3px;
+  border-radius: 2px;
 }
 
 /* --- Estructura --- */
@@ -109,93 +103,92 @@ a {
   width: 100%;
   max-width: var(--ancho);
   margin-inline: auto;
-  padding-inline: 1rem;
-}
-
-.banda-unidad {
-  height: var(--banda);
-  background: var(--color-unidad, var(--borde-tenue));
-}
-
-.encabezado {
-  border-bottom: var(--trazo) solid var(--borde);
+  padding-inline: var(--margen);
 }
 
 .encabezado__interior {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: 0.25rem 0.75rem;
-  padding-block: 0.75rem;
+  gap: 0.2rem 0.7rem;
+  padding-block: 1.25rem 0;
 }
 
-.encabezado__escuela {
-  font-family: var(--titulo);
-  font-weight: 800;
+.encabezado__escuela,
+.encabezado__materia {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  font-size: 0.8rem;
+  color: var(--tinta-3);
   text-decoration: none;
 }
 
-.encabezado__materia {
-  font-family: var(--mono);
-  font-size: 0.75rem;
-  color: var(--tinta-tenue);
+.encabezado__escuela:hover,
+.encabezado__materia a:hover {
+  color: var(--tinta);
 }
 
 .migas {
   font-family: var(--mono);
-  font-size: 0.75rem;
-  color: var(--tinta-tenue);
-  padding-block: 0.75rem;
-  border-bottom: 1px solid var(--borde-tenue);
+  font-size: 0.7rem;
+  color: var(--tinta-3);
+  padding-block: 0.75rem 0;
 }
 
 main {
-  padding-block: 1.5rem 3rem;
+  padding-block: 1.25rem 3.5rem;
 }
 
 .pie {
-  border-top: var(--trazo) solid var(--borde);
+  border-top: 1px solid var(--filete);
   font-size: 0.8rem;
-  color: var(--tinta-tenue);
-  padding-block: 1rem 2rem;
+  color: var(--tinta-3);
+  padding-block: 1.25rem 2.5rem;
+  margin-top: 2rem;
 }
 
 /* --- Navegación de unidades --- */
+/* Sin cajas: cada unidad es un rótulo con su punto de color y una lista
+   de temas separados por filetes. */
 
 .unidad {
-  border: var(--trazo) solid var(--borde);
-  border-left-width: var(--banda);
-  border-left-color: var(--color-unidad);
-  margin-block: 1.25rem;
+  margin-block: 2.25rem;
 }
 
 .unidad__rotulo {
-  display: flex;
-  align-items: baseline;
-  gap: 0.6rem;
-  padding: 0.6rem 0.9rem;
-  border-bottom: 1px solid var(--borde-tenue);
+  display: block;
+  margin-bottom: 0.15rem;
 }
 
 .unidad__numero {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
   font-family: var(--mono);
-  font-size: 0.75rem;
+  font-size: 0.66rem;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--tinta-tenue);
-  white-space: nowrap;
+  color: var(--tinta-3);
+}
+
+/* El punto lleva el color de la banda de la unidad. */
+.unidad__numero::before {
+  content: '';
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--color-unidad, var(--filete-fuerte));
+  /* El amarillo de la unidad 4 no llega a 3:1 contra el papel. El aro da el
+     contraste sin falsear el color de la banda, que es lo que se enseña. */
+  box-shadow: 0 0 0 1px var(--tinta-2);
 }
 
 .unidad__nombre {
-  font-family: var(--titulo);
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-  font-size: 0.95rem;
-  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0.2rem 0 0.35rem;
 }
 
 .temas {
@@ -204,68 +197,75 @@ main {
   padding: 0;
 }
 
-.temas > li + li {
-  border-top: 1px solid var(--borde-tenue);
+.temas > li {
+  border-top: 1px solid var(--filete);
 }
 
 .tema {
   display: block;
-  padding: 0.75rem 0.9rem;
+  padding: 0.95rem 0;
   text-decoration: none;
+}
+
+.tema__titulo {
+  display: block;
+  font-size: 1.02rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
 }
 
 .tema:hover .tema__titulo,
 .tema:focus-visible .tema__titulo {
   text-decoration: underline;
-}
-
-.tema__titulo {
-  font-weight: 600;
+  text-underline-offset: 0.18em;
 }
 
 .tema__resumen {
   font-size: 0.875rem;
-  color: var(--tinta-tenue);
-  margin: 0.15rem 0 0;
+  color: var(--tinta-2);
+  margin: 0.1rem 0 0;
 }
 
 .tema__meta {
   font-family: var(--mono);
   font-size: 0.7rem;
-  color: var(--tinta-tenue);
-  margin-top: 0.3rem;
+  color: var(--tinta-3);
+  margin: 0.35rem 0 0;
 }
 
 .vacio {
-  padding: 0.75rem 0.9rem;
   font-size: 0.875rem;
-  color: var(--tinta-tenue);
+  color: var(--tinta-3);
+  border-top: 1px solid var(--filete);
+  padding-top: 0.95rem;
   margin: 0;
 }
 
 /* --- Ficha del apunte --- */
 
 .ficha {
-  border: var(--trazo) solid var(--borde);
-  padding: 0.75rem 0.9rem;
-  margin-block: 1.5rem;
+  border-top: 1px solid var(--filete);
+  border-bottom: 1px solid var(--filete);
+  padding-block: 0.9rem;
+  margin-block: 1.75rem;
 }
 
 .ficha dl {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: 0.2rem 0.75rem;
+  gap: 0.35rem 1.1rem;
   margin: 0;
-  font-size: 0.85rem;
+  font-size: 0.875rem;
 }
 
 .ficha dt {
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: 0.66rem;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--tinta-tenue);
+  letter-spacing: 0.11em;
+  color: var(--tinta-3);
   align-self: baseline;
+  padding-top: 0.15rem;
 }
 
 .ficha dd {
@@ -274,36 +274,55 @@ main {
 
 /* --- Cuerpo del apunte --- */
 
+.apunte {
+  font-size: 1.02rem;
+}
+
 .apunte :is(p, ul, ol) {
-  margin-block: 0.9rem;
+  margin-block: 1.1rem;
+}
+
+.apunte :is(ul, ol) {
+  padding-left: 1.15rem;
+}
+
+.apunte li + li {
+  margin-top: 0.4rem;
 }
 
 .apunte table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   display: block;
   overflow-x: auto;
 }
 
 .apunte :is(th, td) {
-  border: 1px solid var(--borde-tenue);
-  padding: 0.35rem 0.6rem;
+  border-bottom: 1px solid var(--filete);
+  padding: 0.5rem 0.7rem 0.5rem 0;
   text-align: left;
 }
 
 .apunte th {
   font-family: var(--mono);
-  font-size: 0.75rem;
+  font-size: 0.66rem;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.11em;
+  color: var(--tinta-3);
+  font-weight: 400;
+  border-bottom-color: var(--filete-fuerte);
 }
 
 .apunte blockquote {
-  margin: 1.25rem 0;
-  padding: 0.6rem 0.9rem;
-  border-left: var(--banda) solid var(--color-unidad);
-  background: var(--panel);
+  margin: 1.6rem 0;
+  padding-left: 1.1rem;
+  border-left: 2px solid var(--color-unidad, var(--filete-fuerte));
+  color: var(--tinta-2);
+}
+
+.apunte blockquote strong {
+  color: var(--tinta);
 }
 
 .apunte blockquote > :first-child {
@@ -313,34 +332,52 @@ main {
   margin-bottom: 0;
 }
 
-/* KaTeX: que las fórmulas largas scrolleen y no rompan el ancho en 360 px */
+.apunte hr {
+  border: 0;
+  border-top: 1px solid var(--filete);
+  margin-block: 2rem;
+}
+
+/* KaTeX: las fórmulas largas scrollean solas y no rompen el ancho a 360 px. */
 .apunte .katex-display {
   overflow-x: auto;
   overflow-y: hidden;
-  padding-block: 0.4rem;
+  padding-block: 0.5rem;
 }
+
+/* --- Paginación --- */
 
 .paginacion {
   display: flex;
   justify-content: space-between;
-  gap: 1rem;
-  margin-top: 2.5rem;
-  border-top: var(--trazo) solid var(--borde);
-  padding-top: 1rem;
-  font-size: 0.875rem;
+  gap: 1.25rem;
+  margin-top: 3rem;
+  border-top: 1px solid var(--filete);
+  padding-top: 1.1rem;
+  font-size: 0.9rem;
 }
 
 .paginacion a {
   max-width: 48%;
+  text-decoration: none;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.paginacion a:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
 }
 
 .paginacion__rotulo {
   display: block;
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: 0.66rem;
+  font-weight: 400;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--tinta-tenue);
+  letter-spacing: 0.11em;
+  color: var(--tinta-3);
+  margin-bottom: 0.15rem;
 }
 
 .descargas {
@@ -353,8 +390,9 @@ main {
   position: absolute;
   left: -9999px;
 }
+
 .saltar:focus {
   position: static;
   display: inline-block;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem var(--margen);
 }

@@ -210,24 +210,40 @@ tiempo sin que a nadie le moleste.
 
 ## 9. Dirección visual
 
-**Concepto:** el sitio se ve como un tablero de laboratorio, no como una plataforma
-educativa genérica.
+**Concepto: "pizarra clara".** Aire, tipografía grande y filetes de un pixel. Ninguna
+caja, ningún borde grueso, ninguna sombra. El sitio se lee como un apunte bien
+compuesto, no como una plataforma con widgets.
 
-- **Paleta = código de colores de resistencias.** Cada unidad toma su color de la banda
-  correspondiente a su número: unidad 1 marrón (`#7B4B2A`), unidad 2 rojo (`#B4342B`),
-  unidad 3 naranja (`#D4762A`), unidad 4 amarillo (`#D9A428`). Fondo gris pizarra frío
-  (`#1C1F24` en oscuro / `#F2F3F5` en claro), texto `#E8E9EB` / `#22262C`, verde señal
-  (`#3FA66B`) exclusivamente para resultados correctos. Ningún otro color entra al sistema.
-- **Tipografía:** IBM Plex Sans para el cuerpo, IBM Plex Mono para **todo valor numérico,
-  unidad y resultado** — sin excepción, para que un número siempre se lea como número.
-  Títulos en Archivo 800, condensada y en caja alta solo en los rótulos de unidad.
-- **Elemento firma:** el borde superior de cada página de unidad es una banda del color
-  de la unidad, con el ancho de una banda de resistencia real. El alumno aprende el
-  código de colores navegando el sitio.
+Regla que ordena todo lo demás: **el resultado de un cálculo es el elemento más grande
+de la pantalla**, porque es a lo que el alumno vino. Todo el resto se subordina.
+
+- **Paleta.** Papel `#FBFCFD`, tinta `#131820`, texto de apoyo `#626D7A`, rótulos
+  `#7A8592`, filete `#E6EAEE`. Verde señal `#1D6B45` **exclusivamente** para resultados
+  correctos y para el foco de teclado.
+- **El sitio es claro siempre**, sin seguir el modo oscuro del sistema. La dirección se
+  eligió sobre una muestra clara; servir una variante oscura según la preferencia del
+  navegador entregaba un sitio que el docente no había elegido. Si más adelante hace
+  falta un modo oscuro, va como interruptor explícito, no como respuesta automática al
+  sistema operativo.
+- **Color de unidad = código de colores de resistencias.** Unidad 1 marrón (`#7B4B2A`),
+  2 rojo (`#B4342B`), 3 naranja (`#D4762A`), 4 amarillo (`#D9A428`). Aparece como un
+  punto de 7 px junto al rótulo de la unidad y como filete izquierdo en las citas. El
+  punto lleva un aro fino de 1 px: el amarillo de la unidad 4 da 2,2:1 contra el papel y
+  no llegaría al mínimo de 3:1, y falsear el color no es opción porque el color **es** lo
+  que se enseña.
+- **Tipografía.** Libre Franklin para todo el texto, en 400 y 600. IBM Plex Mono para
+  **todo valor numérico, unidad y resultado** — sin excepción, para que un número siempre
+  se lea como número —, y también para rótulos y metadatos, en versalita espaciada.
+  Ambas autohospedadas (ver §3).
 - **Los esquemas de circuito se dibujan con simbología IRAM/IEC**, la misma que usan en
-  el pizarrón y en las carpetas. Trazo de 2 px, sin sombras, sin gradientes, sin
-  esquinas redondeadas: es un plano, no una tarjeta.
+  el pizarrón y en las carpetas. Trazo de 2 px, sin sombras, sin gradientes, sin esquinas
+  redondeadas. Esto no se moderniza: el alumno tiene que ver en pantalla el mismo símbolo
+  que copió del pizarrón.
 - Piso de calidad: contraste AA, foco de teclado visible, todo usable a 360 px de ancho.
+
+> Nota de historia: la primera versión de esta sección pedía un "tablero de laboratorio"
+> con bordes negros de 2 px, cero radio y cero sombras. Se implementó y se descartó: leía
+> como software viejo. La dirección actual la eligió el docente entre tres propuestas.
 
 ## 10. Plan de trabajo por fases
 

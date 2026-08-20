@@ -7,7 +7,7 @@ const materias = (await getCollection('materias')).sort((a, b) =>
 );
 const apuntes = await getCollection('apuntes');
 
-const cantidadPorMateria = (slug: string) =>
+const cantidad = (slug: string) =>
   apuntes.filter((a) => a.id.split('/')[0] === slug).length;
 ---
 
@@ -22,27 +22,21 @@ const cantidadPorMateria = (slug: string) =>
   </p>
 
   <nav aria-label="Materias">
-    {
-      materias.map((m) => (
-        <section class="unidad" style="--color-unidad: var(--u1)">
-          <div class="unidad__rotulo">
-            <span class="unidad__numero">{m.data.curso}</span>
-            <h2 class="unidad__nombre">{m.data.nombre}</h2>
-          </div>
-          <ul class="temas">
-            <li>
-              <a class="tema" href={`/${m.id}/`}>
-                <span class="tema__titulo">Ver las unidades</span>
-                <p class="tema__resumen">{m.data.resumen}</p>
-                <p class="tema__meta">
-                  {cantidadPorMateria(m.id)} apunte{cantidadPorMateria(m.id) === 1 ? '' : 's'} ·{' '}
-                  {m.data.unidades.length} unidades
-                </p>
-              </a>
-            </li>
-          </ul>
-        </section>
-      ))
-    }
+    <ul class="temas">
+      {
+        materias.map((m) => (
+          <li>
+            <a class="tema" href={`/${m.id}/`}>
+              <span class="tema__titulo">{m.data.nombre}</span>
+              <p class="tema__resumen">{m.data.resumen}</p>
+              <p class="tema__meta">
+                {m.data.curso} · {cantidad(m.id)} apunte
+                {cantidad(m.id) === 1 ? '' : 's'} · {m.data.unidades.length} unidades
+              </p>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
   </nav>
 </Base>
