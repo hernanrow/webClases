@@ -1,0 +1,53 @@
+---
+import QRCode from 'qrcode';
+
+/**
+ * Envoltorio de cada simulador. En pantalla no se nota: deja pasar la isla tal
+ * cual. En papel la reemplaza por una captura estática, un pie que dice dónde
+ * está la versión que se puede tocar, y un QR al tema puntual (CLAUDE.md §8).
+ *
+ * El QR se genera **en el build**, no en el navegador: es un SVG inline de unos
+ * 700 bytes y no cuesta un solo kilobyte de JavaScript al alumno.
+ */
+
+interface Props {
+  /** Nombre del simulador, el que va en el pie de la captura. */
+  nombre: string;
+  /** Ruta del tema al que apunta el QR, sin dominio. Ej: "/circuitos-redes-i/01-ley-de-ohm/" */
+  ruta: string;
+  /**
+   * Captura estática representativa, en `public/capturas/`. La genera el mismo
+   * script que imprime los PDF. Si todavía no existe, en papel queda el pie solo.
+   */
+  captura?: string;
+}
+
+const { nombre, ruta, captura } = Astro.props;
+
+const url = new URL(ruta, Astro.site ?? 'https://webclases.hernanatrodriguez.workers.dev').href;
+
+const qr = await QRCode.toString(url, {
+  type: 'svg',
+  margin: 0,
+  errorCorrectionLevel: 'M',
+  color: { dark: '#131820', light: '#0000' },
+});
+---
+
+<div class="simulador">
+  <div class="simulador__interactivo">
+    <slot />
+  </div>
+
+  <figure class="simulador__papel">
+    {captura && <img src={captura} alt={`Captura del simulador de ${nombre.toLowerCase()}`} />}
+    <figcaption>
+      <span class="simulador__nombre">{nombre}</span>
+      <span class="simulador__nota">
+        Versión interactiva en el sitio. Escaneá el código o entrá a
+        <span class="simulador__url">{url.replace(/^https:\/\//, '')}</span>
+      </span>
+    </figcaption>
+    <div class="simulador__qr" set:html={qr} aria-hidden="true"></div>
+  </figure>
+</div>

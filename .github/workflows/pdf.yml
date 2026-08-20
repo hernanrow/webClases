@@ -1,0 +1,70 @@
+name: Versión imprimible
+
+# Los PDF se generan acá y no en el build de Cloudflare a propósito: Playwright
+# descarga Chromium (>100 MB), y hacerlo en cada push convertiría un deploy de
+# 5 segundos en varios minutos. Acá corre solo cuando cambia lo que afecta al
+# papel, y commitea el resultado — que después Cloudflare publica como archivos
+# estáticos, sin costo.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/content/**'
+      - 'src/components/**'
+      - 'src/layouts/**'
+      - 'src/styles/**'
+      - 'scripts/generar-pdf.mjs'
+      - '.github/workflows/pdf.yml'
+  workflow_dispatch:
+
+# Si se pushean dos commits seguidos, solo interesa el PDF del último.
+concurrency:
+  group: pdf
+  cancel-in-progress: true
+
+jobs:
+  generar:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      - name: Instalar Chromium
+        run: npx playwright install --with-deps chromium
+
+      # Dos vueltas: la primera captura los simuladores, la segunda reconstruye
+      # el sitio ya con esas capturas adentro y recién ahí imprime.
+      - name: Capturar simuladores
+        run: |
+          npm run build
+          node scripts/generar-pdf.mjs --capturas
+
+      - name: Imprimir PDF
+        run: |
+          npm run build
+          node scripts/generar-pdf.mjs --pdf
+
+      - name: Commitear si algo cambió
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/capturas public/descargas
+          if git diff --cached --quiet; then
+            echo "Los PDF ya estaban al día."
+            exit 0
+          fi
+          git commit -m "Regenerar la versión imprimible
+
+          Generado automáticamente desde el HTML por scripts/generar-pdf.mjs.
+          No editar a mano: se pisa en el próximo cambio de contenido."
+          git push

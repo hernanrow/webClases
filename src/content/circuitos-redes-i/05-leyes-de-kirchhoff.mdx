@@ -8,6 +8,7 @@ requisitos: ["03-serie-paralelo-mixto"]
 pdf: true
 ---
 
+import Simulador from '../../components/Simulador.astro';
 import VerificadorKirchhoff from '../../components/sim/VerificadorKirchhoff.tsx';
 
 ## Por qué son el fondo de todo
@@ -73,7 +74,9 @@ Resolvé el circuito en la carpeta y escribí abajo las tres corrientes que te d
 componente te dice **cuál** ecuación no cierra y por cuánto, que es lo que necesitás
 para encontrar el error. Si te decís «me da mal» sin saber dónde, no aprendiste nada.
 
-<VerificadorKirchhoff client:visible />
+<Simulador nombre="Verificador de Kirchhoff" ruta="/circuitos-redes-i/05-leyes-de-kirchhoff/" captura="/capturas/05-leyes-de-kirchhoff.png">
+  <VerificadorKirchhoff client:visible />
+</Simulador>
 
 Podés cambiar las fuentes y las resistencias para armarte los ejercicios que quieras.
 

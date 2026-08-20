@@ -8,6 +8,7 @@ requisitos: ["03-serie-paralelo-mixto"]
 pdf: true
 ---
 
+import Simulador from '../../components/Simulador.astro';
 import EstrellaTriangulo from '../../components/sim/EstrellaTriangulo.tsx';
 
 ## El problema que resuelve
@@ -75,7 +76,9 @@ lados que llegan a A son $R_{AB}$ y $R_{CA}$.
 Editá cualquier lado y mirá cómo se acomoda el otro. El desarrollo de abajo te muestra
 las tres cuentas con los valores puestos.
 
-<EstrellaTriangulo client:visible />
+<Simulador nombre="Estrella ↔ triángulo" ruta="/circuitos-redes-i/04-estrella-triangulo/" captura="/capturas/04-estrella-triangulo.png">
+  <EstrellaTriangulo client:visible />
+</Simulador>
 
 ## El caso equilibrado
 

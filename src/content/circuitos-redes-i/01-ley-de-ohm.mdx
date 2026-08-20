@@ -8,6 +8,7 @@ requisitos: []
 pdf: true
 ---
 
+import Simulador from '../../components/Simulador.astro';
 import LeyDeOhm from '../../components/sim/LeyDeOhm.tsx';
 
 ## De qué se trata
@@ -50,7 +51,9 @@ la que vamos a pedir en las evaluaciones.
 Probalo vos: cambiá los valores y mirá cómo se mueve el tercero. Si escribís en el
 campo que está calculado, pasa a ser dato y se despeja otro.
 
-<LeyDeOhm client:visible />
+<Simulador nombre="Ley de Ohm" ruta="/circuitos-redes-i/01-ley-de-ohm/" captura="/capturas/01-ley-de-ohm.png">
+  <LeyDeOhm client:visible />
+</Simulador>
 
 ## Potencia
 

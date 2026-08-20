@@ -8,6 +8,7 @@ requisitos: ["01-ley-de-ohm"]
 pdf: true
 ---
 
+import Simulador from '../../components/Simulador.astro';
 import RedResistiva from '../../components/sim/RedResistiva.tsx';
 
 ## La idea
@@ -66,7 +67,9 @@ Cambiá los valores, agregá resistencias, cambiá serie por paralelo. Abajo apa
 desarrollo, no solo el resultado: seguí la cuenta y comparala con la que harías en la
 carpeta.
 
-<RedResistiva client:visible />
+<Simulador nombre="Red de resistencias" ruta="/circuitos-redes-i/03-serie-paralelo-mixto/" captura="/capturas/03-serie-paralelo-mixto.png">
+  <RedResistiva client:visible />
+</Simulador>
 
 ## Las mixtas
 

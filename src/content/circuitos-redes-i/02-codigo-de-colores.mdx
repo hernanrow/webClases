@@ -8,6 +8,7 @@ requisitos: ["01-ley-de-ohm"]
 pdf: true
 ---
 
+import Simulador from '../../components/Simulador.astro';
 import CodigoColores from '../../components/sim/CodigoColores.tsx';
 
 ## Por qué existe
@@ -64,7 +65,9 @@ secuencia porque no son cifras: solo sirven como multiplicador o como tolerancia
 Tocá cada banda para cambiarle el color y mirá cómo se mueve el valor. Después probá al
 revés: escribí un valor abajo y mirá qué bandas te quedan.
 
-<CodigoColores client:visible />
+<Simulador nombre="Código de colores" ruta="/circuitos-redes-i/02-codigo-de-colores/" captura="/capturas/02-codigo-de-colores.png">
+  <CodigoColores client:visible />
+</Simulador>
 
 ## Un ejemplo que vas a ver mil veces
 
